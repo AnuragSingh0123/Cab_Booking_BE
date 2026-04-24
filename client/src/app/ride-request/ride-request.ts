@@ -3,100 +3,151 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RideService } from '../ride-service';
 import { CommonModule } from '@angular/common';
-import { take } from 'rxjs';
+import { take, Subject, debounceTime, distinctUntilChanged, switchMap, of } from 'rxjs';
+import { LocationService } from '../location-service';
 
 @Component({
   selector: 'app-ride-request',
+  standalone: true,
   imports: [FormsModule, CommonModule],
   templateUrl: './ride-request.html',
   styleUrl: './ride-request.css',
 })
 export class RideRequest {
 
-  
-  pickup:string='';
-  drop:string='';
+  pickup: string = '';
+  drop: string = '';
+  selectedValue: string = '';
 
-  selectedValue:string='';
+  route = inject(Router);
+  rideService = inject(RideService);
+  locationService = inject(LocationService);
 
-  route=inject(Router);
+  rideCheckoutDetails: any = null;
 
-  rideCheckoutDetails:any=null;
-  // rideCheckoutDetails:any={
-  //   pickup: 'Bangalore',
-  //       drop: 'pune',
-  //       distance: '180',
-  //       vehicle: 'Bike',
-  //       amount: 5000,
-  //       gst: 200
-  // };
+  loading$ = this.rideService.loading$;
+  rideDetails$ = this.rideService.rideDetails$;
 
-  
-  rideService=inject(RideService);
+  pickupSuggestions: any[] = [];
+  dropSuggestions: any[] = [];
 
-  // ngOnInit(){
-  //   this.rideService.setRideDetails('180','80');
-  // }
-  
-  loading$=this.rideService.loading$;
+  pickupSubject = new Subject<string>();
+  dropSubject = new Subject<string>();
 
-  rideDetails$=this.rideService.rideDetails$;
+  ngOnInit() {
 
-  rideRequest(){
-   
+    this.pickupSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap(value => {
+        if (!value || value.trim().length < 3) {
+          this.pickupSuggestions = [];
+          return of([]);
+        }
+        return this.locationService.searchLocation(value);
+      })
+    ).subscribe((res: any) => {
+      this.pickupSuggestions = res || [];
+    });
+
+    this.dropSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap(value => {
+        if (!value || value.trim().length < 3) {
+          this.dropSuggestions = [];
+          return of([]);
+        }
+        return this.locationService.searchLocation(value);
+      })
+    ).subscribe((res: any) => {
+      this.dropSuggestions = res || [];
+    });
+  }
+
+  onPickupChange(value: string) {
+    if (!value || value.trim().length < 3) {
+      this.pickupSuggestions = [];
+    }
+    this.pickupSubject.next(value);
+  }
+
+  onDropChange(value: string) {
+    if (!value || value.trim().length < 3) {
+      this.dropSuggestions = [];
+    }
+    this.dropSubject.next(value);
+  }
+
+  selectPickup(place: any) {
+    this.pickup = place.display_name;
+    this.pickupSuggestions = [];
+  }
+
+  selectDrop(place: any) {
+    this.drop = place.display_name;
+    this.dropSuggestions = [];
+  }
+
+  rideRequest() {
+
     const loginData = localStorage.getItem("login");
-  let isLoggedIn = false;
+    let isLoggedIn = false;
 
-  if (loginData) {
-    try {
-      const parsedData = JSON.parse(loginData);
-      isLoggedIn = !!parsedData.isLoggedIn;
-    } catch (e) {
-      console.error("Error parsing login data", e);
-    }
-  }
-
-  if (!isLoggedIn) {
-    this.route.navigate(["login"]);
-    return;
-  }
-
-    console.log("Here");
-    this.rideService.setRide(this.pickup,this.drop);
-  }
-
-  checkoutDetails(){
-    this.rideService.rideDetails$.subscribe(details => {
-
-      let fare;
-      let gst;
-
-      if(this.selectedValue==='auto') {
-        fare = 20+Number(details.distance)*12;
-        gst = fare*18/100;
-      } else if(this.selectedValue==='bike') {
-        fare = 20+Number(details.distance)*7;
-        gst = fare*18/100;
-      }else if(this.selectedValue==='suv'){
-        fare = 20+Number(details.distance)*19;
-        gst = fare*18/100;
+    if (loginData) {
+      try {
+        const parsedData = JSON.parse(loginData);
+        isLoggedIn = !!parsedData.isLoggedIn;
+      } catch (e) {
+        console.error("Error parsing login data", e);
       }
-    if (details) {
-      this.rideCheckoutDetails = {
-        pickup: this.pickup,
-        drop: this.drop,
-        distance: details.distance,
-        vehicle: this.selectedValue,
-        fare: Number(fare?.toFixed(2)),
-        gst: Number(gst?.toFixed(2))
-      };
-      console.log('Checkout Details:', this.rideCheckoutDetails);
     }
-  });
+
+    if (!isLoggedIn) {
+      this.route.navigate(["login"]);
+      return;
+    }
+
+    this.rideService.setRide(this.pickup, this.drop);
   }
 
-  bookRide(){
+
+  checkoutDetails() {
+
+    if (!this.selectedValue) return;
+
+    this.rideService.rideDetails$
+      .pipe(take(1))
+      .subscribe(details => {
+
+        if (!details) return;
+
+        let fare = 0;
+
+        if (this.selectedValue === 'auto') {
+          fare = 20 + Number(details.distance) * 12;
+        } else if (this.selectedValue === 'bike') {
+          fare = 20 + Number(details.distance) * 7;
+        } else if (this.selectedValue === 'suv') {
+          fare = 20 + Number(details.distance) * 19;
+        }
+
+        const gst = fare * 0.18;
+
+        this.rideCheckoutDetails = {
+          pickup: this.pickup,
+          drop: this.drop,
+          distance: details.distance,
+          vehicle: this.selectedValue,
+          fare: Number(fare.toFixed(2)),
+          gst: Number(gst.toFixed(2))
+        };
+
+        console.log('Checkout Details:', this.rideCheckoutDetails);
+      });
+  }
+
+  bookRide() {
     this.route.navigate(['ride-booked']);
   }
-
 }

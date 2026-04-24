@@ -1,0 +1,53 @@
+.success-container {
+    height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.success-card {
+    text-align: center;
+    background: #f8f9fb;
+    padding: 40px 30px;
+    border-radius: 16px;
+    width: 350px;
+}
+
+
+.icon {
+    font-size: 50px;
+    color: #16a34a;
+    margin-bottom: 15px;
+}
+
+
+.title {
+    font-size: 36px;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+
+.subtitle {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+
+.btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: black;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn:hover {
+    background: #222;
+}
