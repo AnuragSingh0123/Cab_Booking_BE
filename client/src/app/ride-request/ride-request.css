@@ -1,0 +1,9 @@
+
+
+.vcard input {
+    display: none;
+}
+
+.vcard input:checked + .vcard-content {
+    border: 3px solid gray;
+}

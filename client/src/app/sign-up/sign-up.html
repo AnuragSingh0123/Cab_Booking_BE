@@ -1,0 +1,21 @@
+<div [ngStyle]="{'height': role === 'driver' ? '75vh' : '60vh'}"  style="width: 100%; display: flex; justify-content: center; align-items: center;">
+    <form [formGroup]="signUpForm" (ngSubmit)="signup()">
+        <div style="display: flex; flex-direction: column; gap: 20px; width: 300px;">
+        <input formControlName="name" style="padding: 10px 20px; border-radius: 5px; border: 0; background-color: whitesmoke;" type="text" placeholder="Enter your Name" required>
+        <input formControlName="email" style="padding: 10px 20px; border-radius: 5px; border: 0; background-color: whitesmoke;" type="email" placeholder="Enter your email" required>
+        <input formControlName="password" style="padding: 10px 20px; border-radius: 5px; border: 0; background-color: whitesmoke;" type="password" placeholder="Enter your password" required>
+        @if(role==="driver") {
+             <input formControlName="licenseNumber" style="padding: 10px 20px; border-radius: 5px; border: 0; background-color: whitesmoke;" type="text" placeholder="Enter your License number" required>
+             <select formControlName="vehicleType" style="padding: 10px 20px; border-radius: 5px; border: 0; background-color: whitesmoke;">
+                 <option style="padding: 10px 20px; border-radius: 5px; border: 0; background-color: whitesmoke;" value="" hidden>Select Vehicle Type</option>
+                 <option style="padding: 10px 20px; border-radius: 5px; border: 0; background-color: whitesmoke;" value="Auto">Auto</option>
+                 <option style="padding: 10px 20px; border-radius: 5px; border: 0; background-color: whitesmoke;" value="Bike">Bike</option>
+                 <option style="padding: 10px 20px; border-radius: 5px; border: 0; background-color: whitesmoke;" value="Sedan">Sedan</option>
+                 <option style="padding: 10px 20px; border-radius: 5px; border: 0; background-color: whitesmoke;" value="SUV">SUV</option>
+             </select>
+            <input formControlName="vehicleNumber" style="padding: 10px 20px; border-radius: 5px; border: 0; background-color: whitesmoke;" type="password" placeholder="Enter your Vehicle Number" required>
+        }
+        <button style="background-color: black; padding: 10px 20px; border-radius: 5px; color: white; font-size: 20px; font-weight: bold; margin-top: 10px;">Continue</button>
+    </div>
+    </form>
+</div>

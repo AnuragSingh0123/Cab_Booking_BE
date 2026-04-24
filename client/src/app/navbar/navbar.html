@@ -1,0 +1,17 @@
+<header>
+    <nav style="display: flex; justify-content: space-between; padding: 20px 40px; border-bottom: 1px solid black;">
+        <div style="display: flex; gap: 30px; align-items: center;">
+            <div routerLink="" style="cursor: pointer;">
+                <img src="" alt="Logo">
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <a routerLink="sign-up" [queryParams]="{role: 'driver'}" style="text-decoration: none; font-weight: 500; color: black;">Earn</a>
+                <a routerLink="about" style="text-decoration: none; font-weight: 500; color: black;">About</a>
+            </div>
+        </div>
+        <div style="display: flex; gap: 20px;">
+            <a routerLink="login" style="text-decoration: none; font-weight: 500; color: black;">Log in</a>
+            <a routerLink="sign-up" [queryParams]="{role: 'rider'}" style="text-decoration: none; font-weight: 500; color: black;">Sign up</a>
+        </div>
+    </nav>
+</header>

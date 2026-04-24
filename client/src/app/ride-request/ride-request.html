@@ -1,0 +1,128 @@
+@if(rideCheckoutDetails){
+    <div>
+                <h1 style="font-weight: bolder; font-size: 50px; margin-bottom: 40px;">Checkout</h1>
+                <div style="display: flex; flex-direction: column; max-width: 360px; gap: 15px;">
+                    <div>
+                        <div style="display: flex; flex-direction: column;">
+                            <div style="display: flex;">
+                                <div style="font-weight: bolder; width: 120px;">FROM </div>
+                                <div>{{rideCheckoutDetails.pickup | uppercase}}</div>
+                            </div>
+                            <div style="display: flex;">
+                                <div style="font-weight: bolder; width: 120px;">TO </div>
+                                <div>{{rideCheckoutDetails.drop | uppercase}}</div>
+                            </div>
+                            <div style="display: flex;">
+                                <div style="font-weight: bolder; width: 120px;">DISTANCE </div>
+                                <div>{{rideCheckoutDetails.distance | uppercase}} KM</div>
+                            </div>
+                            <div style="display: flex;">
+                                <div style="font-weight: bolder; width: 120px;">VEHCILE </div>
+                                <div>{{rideCheckoutDetails.vehicle | uppercase}}</div>
+                            </div>
+                            <div style="display: flex;">
+                                <div style="font-weight: bolder; width: 120px;">FARE </div>
+                                <div>Rs.{{rideCheckoutDetails.fare}}</div>
+                            </div>
+                            <div style="display: flex;">
+                                <div style="font-weight: bolder; width: 120px;">GST </div>
+                                <div>Rs.{{rideCheckoutDetails.gst}}</div>
+                            </div>
+                            <div style="display: flex;">
+                                <div style="font-weight: bolder; width: 120px;">TOTAL </div>
+                                <div>Rs.{{rideCheckoutDetails.fare + rideCheckoutDetails.gst}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button (click)="bookRide()" style="background-color: black; padding: 10px 20px; border-radius: 5px; color: white; font-size: 20px; font-weight: bold; margin-top: 10px;">
+                        Book Ride
+                    </button>
+                </div>
+            </div>
+}
+@else if((rideDetails$ | async)?.distance && (rideDetails$ | async)?.time){
+     <div>
+                <h1 style="font-weight: bolder; font-size: 50px; margin-bottom: 20px;">Choose a ride</h1>
+                <p style="font-weight: bolder; font-size: 20px;">{{pickup | titlecase}} => {{drop | titlecase}}</p>
+                
+                {{selectedValue}}
+                <div style="display: flex; flex-direction: column; max-width: 360px; gap: 15px;">
+
+                <!-- Auto -->
+                <label class="vcard">
+                    <input type="radio" name="vehicle" value="auto" [(ngModel)]="selectedValue">
+                    <div class="vcard-content" style="display: flex; justify-content: space-between; background-color: aliceblue; padding: 20px; border-radius: 10px;">
+                        <div style="display: flex; gap: 10px; ">
+                            <div><img src="https://cdn3d.iconscout.com/3d/premium/thumb/auto-rickshaw-10831542-8778534.png" width="60px" height="60px" style="object-fit: contain;" alt="Auto"></div>
+                            <div style="display: flex; flex-direction: column;">
+                                <span style="font-weight: bold; list-style: none;">Auto</span>
+                                <span style="line-height: none; font-size: 10px; font-weight: 700; color: yellowgreen;">{{ (rideDetails$|async).distance }} KM</span>
+                            </div>
+                        </div>
+                        <div>
+                            <p style="font-weight: bold; color: green;">Rs. {{ 20 + (rideDetails$|async)?.distance * 12 | number }}</p>
+                        </div>
+                    </div>
+                </label>
+
+
+                <!-- Bike -->
+
+                <label class="vcard">
+                    <input type="radio" name="vehicle" value="bike" [(ngModel)]="selectedValue">
+                    <div class="vcard-content" style="display: flex; justify-content: space-between; background-color: aliceblue; padding: 20px; border-radius: 10px;">
+                        <div style="display: flex; gap: 10px; ">
+                            <div><img src="https://cdn3d.iconscout.com/3d/premium/thumb/motorcycle-3d-icon-png-download-9656130.png" width="60px" height="60px" style="object-fit: contain;" alt="Bike"></div>
+                            <div style="display: flex; flex-direction: column;">
+                                <span style="font-weight: bold; list-style: none;">Bike</span>
+                                <span style="line-height: none; font-size: 10px; font-weight: 700; color: yellowgreen;">{{ (rideDetails$|async).distance }} KM</span>
+                            </div>
+                        </div>
+                        <div>
+                            <p style="font-weight: bold; color: green;">Rs. {{ 20 + (rideDetails$|async)?.distance * 7 | number }}</p>
+                        </div>
+                    </div>
+                </label>
+
+                 <!-- SUV -->
+
+                <label class="vcard">
+                    <input type="radio" name="vehicle" value="suv" [(ngModel)]="selectedValue">
+                    <div class="vcard-content" style="display: flex; justify-content: space-between; background-color: aliceblue; padding: 20px; border-radius: 10px;">
+                        <div style="display: flex; gap: 10px; ">
+                            <div><img src="suv.png" width="60px" height="60px" style="object-fit: contain;" alt="SUV"></div>
+                            <div style="display: flex; flex-direction: column;">
+                                <span style="font-weight: bold; list-style: none;">SUV</span>
+                                <span style="line-height: none; font-size: 10px; font-weight: 700; color: yellowgreen;">{{ (rideDetails$|async).distance }} KM</span>
+                            </div>
+                        </div>
+                        <div>
+                            <p style="font-weight: bold; color: green;">Rs. {{ 20 + (rideDetails$|async)?.distance * 19 | number }}</p>
+                        </div>
+                    </div>
+                </label>
+
+                <button (click)="checkoutDetails()" style="background-color: black; padding: 10px 20px; border-radius: 5px; color: white; font-size: 20px; font-weight: bold; margin-top: 10px;">
+                        Go to Checkout
+                    </button>
+
+                    
+                </div>
+            </div>
+} 
+@else{
+    <div>
+                <h1 style="font-weight: bolder; font-size: 50px; margin-bottom: 40px;">Request a ride</h1>
+                <div style="display: flex; flex-direction: column; max-width: 360px; gap: 15px;">
+                    <input [(ngModel)]="pickup" style="padding: 10px 20px; border-radius: 5px; border: 0; background-color: whitesmoke;" type="text" placeholder="Pickup location">
+                    <input [(ngModel)]="drop" style="padding: 10px 20px; border-radius: 5px; border: 0; background-color: whitesmoke;" type="text" placeholder="Dropoff location">
+                    <button (click)="rideRequest()" style="background-color: black; padding: 10px 20px; border-radius: 5px; color: white; font-size: 20px; font-weight: bold; margin-top: 10px;">
+                        @if(loading$ | async) {
+                            Searching Rides...
+                        } @else {
+                            Search
+                        }
+                    </button>
+                </div>
+            </div>
+}
