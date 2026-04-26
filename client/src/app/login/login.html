@@ -1,7 +1,18 @@
-<div style="width: 100%; height: 40vh; display: flex; justify-content: center; align-items: center;">
-    <div style="display: flex; flex-direction: column; gap: 20px; width: 300px;">
-        <input [(ngModel)]="email" style="padding: 10px 20px; border-radius: 5px; border: 0; background-color: whitesmoke;" type="text" placeholder="Enter your email">
-        <input [(ngModel)]="password" style="padding: 10px 20px; border-radius: 5px; border: 0; background-color: whitesmoke;" type="password" placeholder="Enter your password">
-        <button (click)="login()" style="background-color: black; padding: 10px 20px; border-radius: 5px; color: white; font-size: 20px; font-weight: bold; margin-top: 10px;">Continue</button>
+
+<form #loginForm="ngForm" (ngSubmit)="login(loginForm)">
+    <div style="width: 100%; height: 40vh; display: flex; justify-content: center; align-items: center;">
+        <div style="display: flex; flex-direction: column; gap: 20px; width: 300px;">
+            <input name="email" #email="ngModel" email required ngModel style="padding: 10px 20px; border-radius: 5px; border: 0; background-color: whitesmoke;" type="text" placeholder="Enter your email">
+            <div *ngIf="email.invalid && email.touched" style="color:red; font-size: 12px;">
+                <div *ngIf="email.errors?.['required']">Email is required</div>
+                <div *ngIf="email.errors?.['email']">Enter a valid email</div>
+            </div>
+            <input name="password" #password="ngModel" required ngModel minlength="6" style="padding: 10px 20px; border-radius: 5px; border: 0; background-color: whitesmoke;" type="password" placeholder="Enter your password">
+            <div *ngIf="password.invalid && password.touched" style="color:red; font-size: 12px;">
+                <div *ngIf="password.errors?.['required']">Password is required</div>
+                <div *ngIf="password.errors?.['minlength']">Password must be at least 6 characters</div>
+            </div>
+            <button type="submit" [disabled]="loginForm.invalid" style="background-color: black; padding: 10px 20px; border-radius: 5px; color: white; font-size: 20px; font-weight: bold; margin-top: 10px;">Continue</button>
+        </div>
     </div>
-</div>
+</form>

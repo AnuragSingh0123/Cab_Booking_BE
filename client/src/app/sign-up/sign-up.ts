@@ -18,14 +18,14 @@ export class SignUp {
   authService=inject(AuthService);
   role!:string|null;
 
-  signUpForm=this.formBuilder.group({
-    name: ["",[]],
-    email: ["",[]],
-    password: ["",[]],
-    licenseNumber: ["",[]],
-    vehicleType: ["",[]],
-    vehicleNumber: ["",[]] 
-  })
+  signUpForm = this.formBuilder.group({
+  name: ['', [Validators.required, Validators.minLength(3)]],
+  email: ['', [Validators.required, Validators.email]],
+  password: ['', [Validators.required, Validators.minLength(6)]],
+  licenseNumber: [''],
+  vehicleType: [''],
+  vehicleNumber: ['']
+});
 
   ngOnInit(){
     // if we use subscribe, event fires if queryParms changes even after component is already rendered
@@ -33,38 +33,38 @@ export class SignUp {
     this.activatedRoute.queryParamMap.subscribe(params => {
     this.role = params.get('role');
     console.log(this.role);
+
+    if (this.role === 'driver') {
+      this.signUpForm.get('licenseNumber')?.setValidators([Validators.required]);
+      this.signUpForm.get('vehicleType')?.setValidators([Validators.required]);
+      this.signUpForm.get('vehicleNumber')?.setValidators([Validators.required]);
+    } else {
+      this.signUpForm.get('licenseNumber')?.clearValidators();
+      this.signUpForm.get('vehicleType')?.clearValidators();
+      this.signUpForm.get('vehicleNumber')?.clearValidators();
+    }
+
+    this.signUpForm.get('licenseNumber')?.updateValueAndValidity();
+    this.signUpForm.get('vehicleType')?.updateValueAndValidity();
+    this.signUpForm.get('vehicleNumber')?.updateValueAndValidity();
+
     });
   }
 
-  signup(){
-    if(this.role === "driver") {
-      let {name, email, password, licenseNumber, vehicleNumber, vehicleType} = this.signUpForm.value;
-      let formData = {
-        name,
-        email,
-        password,
-        licenseNumber,
-        vehicleNumber,
-        vehicleType,
-        role: this.role
-      }
-      this.authService.signUp(formData).subscribe({
-        next: res=>console.log(res),
-        error: err=>console.log(err)
-      });
-    } else {
-      let {name, email, password} = this.signUpForm.value;
-      let formData = {
-        name,
-        email,
-        password,
-        role: this.role
-      }
-      this.authService.signUp(formData).subscribe({
-        next: res=>console.log(res),
-        error: err=>console.log(err)
-      });
-    }
-    // console.log(this.signUpForm.value);
+  signup() {
+  if (this.signUpForm.invalid) {
+    this.signUpForm.markAllAsTouched();
+    return;
   }
+
+  const formData = {
+    ...this.signUpForm.value,
+    role: this.role
+  };
+
+  this.authService.signUp(formData).subscribe({
+    next: res => console.log(res),
+    error: err => console.log(err)
+  });
+}
 }

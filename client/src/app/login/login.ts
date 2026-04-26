@@ -1,28 +1,30 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth-service';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
 export class Login {
-  email:string='';
-  password:string='';
-
   route=inject(Router);
 
   authService=inject(AuthService);
 
-  login(){
+  login(loginForm: NgForm){
+
+    let {email, password} = loginForm.control.value;
+    console.log(email);
+    console.log(password);
+
     let userData = {
       name:"Anurag",
-      email: this.email,
-      password: this.password,
+      email,
+      password,
       isLoggedIn: true
     }
     

@@ -42,7 +42,7 @@
 
     <div class="total-row">
         <span>Total</span>
-        <span>₹ {{rideCheckoutDetails.fare + rideCheckoutDetails.gst}}</span>
+        <span>₹ {{rideCheckoutDetails.fare + rideCheckoutDetails.gst | number}}</span>
     </div>
 
 </div>
@@ -58,6 +58,11 @@
 <div>
     <h1 class="title">Choose a ride</h1>
     <p class="route">{{pickup | titlecase}} → {{drop | titlecase}}</p>
+
+    <p class="meta-info">
+    Distance: {{ (rideDetails$ | async)?.distance }} km • 
+    Estimated time: {{ (rideDetails$ | async)?.time }} min
+</p>
 
     <div class="form-container">
 

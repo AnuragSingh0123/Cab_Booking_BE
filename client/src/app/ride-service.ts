@@ -34,6 +34,10 @@ export class RideService {
 
   rideDetails$ = this.rideDetailsSubject;
 
+  setMsg(msg:string){
+    this.msgSubject.next(msg);
+  }
+
   setRideDetails(distance:string, time:string) {
     console.log("here.........")
     console.log(distance, time);

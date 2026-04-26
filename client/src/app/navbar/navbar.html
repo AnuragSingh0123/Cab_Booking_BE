@@ -9,10 +9,10 @@
     "
   >
     <!-- Left -->
-    <div style="display: flex; gap: 30px; align-items: center">
-      <div routerLink="" style="cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px;">
-        <img src="logo.png" style="width: 100px; height: 40px; object-fit: contain;" alt="Logo" />
-        <h1 style="font-weight: 800; font-size: 30px;">SafarGo</h1>
+    <div style="display: flex; gap: 30px; align-items: center;">
+      <div routerLink="" style="cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; position: relative; top:3px;">
+        <h1 style="font-weight: 800; font-size: 25px;">SafarGo</h1>
+        <img src="logo.png" style="width: 45px; height: 40px; position: relative; bottom: 4px; right: 14px; object-fit: contain;" alt="Logo" />
       </div>
 
       <div style="display: flex; gap: 10px">
@@ -20,7 +20,7 @@
           <a
             routerLink="sign-up"
             [queryParams]="{ role: 'driver' }"
-            style="text-decoration: none; font-weight: 500; color: black"
+            style="text-decoration: none; font-weight: 700; color: black"
           >
             Earn
           </a>

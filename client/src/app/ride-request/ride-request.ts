@@ -92,6 +92,9 @@ export class RideRequest {
     this.dropSuggestions = [];
   }
 
+  msgTimeout:any;
+
+
   rideRequest() {
 
     const loginData = localStorage.getItem("user");
@@ -111,6 +114,18 @@ export class RideRequest {
       return;
     }
 
+    if(!this.pickup.trim() || !this.drop.trim()) {
+      this.rideService.setMsg('Please enter pickup and drop location');
+
+      clearTimeout(this.msgTimeout);
+
+      this.msgTimeout = setTimeout(()=>{
+        this.rideService.setMsg('');
+      },3000)
+      return;
+    }
+
+    this.rideService.setMsg('');
     this.rideService.setRide(this.pickup, this.drop);
   }
 
