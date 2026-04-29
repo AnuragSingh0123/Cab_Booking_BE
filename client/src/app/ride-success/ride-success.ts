@@ -5,20 +5,24 @@ import {
   OnDestroy,
   signal
 } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-ride-success',
-  imports: [RouterModule,CommonModule],
+  standalone: true,
+  imports: [RouterModule, CommonModule],
   templateUrl: './ride-success.html',
   styleUrl: './ride-success.css',
 })
 export class RideSuccess implements OnInit, OnDestroy {
-  activeRide = signal<any>(null);
-  countdown = signal('01:00');
+  constructor(private router: Router) {}
 
+  activeRide = signal<any>(null);
   progress = signal(100);
+
+  rating = signal(0);
+  feedback = signal('');
 
   private sub?: Subscription;
 
@@ -41,43 +45,39 @@ export class RideSuccess implements OnInit, OnDestroy {
 
     this.activeRide.set(ride);
 
-    this.updateTimer();
+    if (!ride) {
+      this.progress.set(100);
+      return;
+    }
+
+    this.updateProgress();
     this.checkExpiry();
   }
 
-  updateTimer() {
-  const ride = this.activeRide();
+  updateProgress() {
+    const ride = this.activeRide();
 
-  if (!ride?.expiresAt) return;
+    if (!ride?.expiresAt) return;
+    if (ride.status !== 'SEARCHING_DRIVER') return;
 
-  const total = 60000; // 60 sec
-  const remaining = ride.expiresAt - Date.now();
+    const total = 60000;
+    const remaining = ride.expiresAt - Date.now();
 
-  if (remaining <= 0) {
-    this.countdown.set('00:00');
-    this.progress.set(0);
-    return;
+    if (remaining <= 0) {
+      this.progress.set(0);
+      return;
+    }
+
+    this.progress.set((remaining / total) * 100);
   }
-
-  const minutes = Math.floor(remaining / 60000);
-  const seconds = Math.floor((remaining % 60000) / 1000);
-
-  this.countdown.set(
-    `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
-  );
-
-  this.progress.set((remaining / total) * 100);
-}
 
   checkExpiry() {
     const ride = this.activeRide();
 
     if (!ride) return;
+    if (ride.status !== 'SEARCHING_DRIVER') return;
 
-    if (
-      Date.now() >= ride.expiresAt &&
-      ride.status === 'SEARCHING_DRIVER'
-    ) {
+    if (Date.now() >= ride.expiresAt) {
       const updatedRide = {
         ...ride,
         status: 'CANCELLED',
@@ -95,7 +95,6 @@ export class RideSuccess implements OnInit, OnDestroy {
 
   cancelRide() {
     const ride = this.activeRide();
-
     if (!ride) return;
 
     const updatedRide = {
@@ -110,5 +109,52 @@ export class RideSuccess implements OnInit, OnDestroy {
     );
 
     this.activeRide.set(updatedRide);
+  }
+
+  setRating(stars: number) {
+    this.rating.set(stars);
+  }
+
+  submitFeedback() {
+  const ride = this.activeRide();
+  if (!ride) return;
+
+  const updatedRide = {
+    ...ride,
+    rating: this.rating(),
+    feedback: this.feedback(),
+    reviewedAt: Date.now(),
+  };
+
+  const history = JSON.parse(
+    localStorage.getItem('rideHistory') || '[]'
+  );
+
+  const index = history.findIndex(
+    (r: any) => r.completedAt === ride.completedAt
+  );
+
+  if (index !== -1) {
+    history[index] = updatedRide;
+  }
+
+  localStorage.setItem(
+    'rideHistory',
+    JSON.stringify(history)
+  );
+
+  localStorage.removeItem('activeRide');
+
+  this.goHome();
+}
+
+  goHome() {
+    localStorage.removeItem('activeRide');
+    this.router.navigate(['/']);
+  }
+
+  bookAgain() {
+    localStorage.removeItem('activeRide');
+    this.router.navigate(['/ride-request']);
   }
 }

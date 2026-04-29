@@ -191,3 +191,66 @@
     font-size:14px;
     color:#666;
 }
+
+.feedback-card{
+    background:#f8f9fa;
+    border:1px solid #e5e7eb;
+    border-radius:14px;
+    padding:24px;
+}
+
+.feedback-title{
+    margin:0;
+    font-size:22px;
+    font-weight:700;
+    color:#111;
+}
+
+.feedback-subtitle{
+    margin:6px 0 20px;
+    color:#666;
+    font-size:14px;
+}
+
+.stars{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.star{
+    border:none;
+    background:none;
+    cursor:pointer;
+    font-size:34px;
+    color:#d1d5db;
+    padding:0;
+}
+
+.star.active{
+    color:black;
+}
+
+.feedback-input{
+    width:100%;
+    min-height:110px;
+    resize:none;
+    padding:14px;
+    border-radius:10px;
+    border:none;
+    background:#eef1f4;
+    font-size:14px;
+    margin-bottom:20px;
+    outline:none;
+}
+
+.secondary-btn{
+    flex:1;
+    padding:14px;
+    border-radius:10px;
+    border:1px solid #d1d5db;
+    background:white;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+}

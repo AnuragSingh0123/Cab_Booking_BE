@@ -10,18 +10,20 @@
 
         <div class="spinner"></div>
 
-        <p class="status-text">Looking for nearby drivers...</p>
+        <p class="status-text">
+            Looking for nearby drivers...
+        </p>
 
         <div class="progress-wrapper">
-    <div
-        class="progress-bar"
-        [style.width.%]="progress()">
-    </div>
-</div>
+            <div
+                class="progress-bar"
+                [style.width.%]="progress()">
+            </div>
+        </div>
 
-<p class="progress-text">
-    Searching nearby drivers...
-</p>
+        <p class="progress-text">
+            Searching nearby drivers...
+        </p>
 
         <button
             class="cancel-btn"
@@ -49,12 +51,16 @@
             </div>
 
             <div class="driver-info">
-                <p class="name">{{activeRide()?.driver?.name}}</p>
+                <p class="name">
+                    {{activeRide()?.driver?.name}}
+                </p>
+
                 <p class="meta">
                     {{activeRide()?.driver?.vehicle}}
                     •
                     {{activeRide()?.driver?.vehicleNo}}
                 </p>
+
                 <p class="rating">
                     ⭐ {{activeRide()?.driver?.rating}}
                 </p>
@@ -104,26 +110,36 @@
 <div class="ride-page">
 
     <h1 class="title">Ride Started</h1>
+
     <p class="subtitle">
         Enjoy your trip. Driver is heading to destination.
     </p>
 
     <div class="status-card">
-        <p class="status-big">On Trip</p>
+
+        <p class="status-big">
+            On Trip
+        </p>
 
         <div class="route-box">
+
             <div class="route-row">
                 <span class="label">FROM</span>
-                <span class="value">{{activeRide()?.pickup}}</span>
+                <span class="value">
+                    {{activeRide()?.pickup}}
+                </span>
             </div>
 
             <div class="route-row">
                 <span class="label">TO</span>
-                <span class="value">{{activeRide()?.drop}}</span>
+                <span class="value">
+                    {{activeRide()?.drop}}
+                </span>
             </div>
-        </div>
-    </div>
 
+        </div>
+
+    </div>
 </div>
 }
 
@@ -131,17 +147,66 @@
 <div class="ride-page">
 
     <h1 class="title">Ride Completed</h1>
+
     <p class="subtitle">
-        Thank you for riding with us.
+        Hope you had a comfortable ride.
     </p>
 
     <div class="status-card success-card">
-        <p class="status-big">✓ Trip Finished</p>
+        <p class="status-big">
+            ✓ Trip Finished
+        </p>
+
         <p class="fare">
             ₹ {{activeRide()?.total | number}}
         </p>
     </div>
 
+    <div class="feedback-card">
+
+        <h2 class="feedback-title">
+            Rate your driver
+        </h2>
+
+        <p class="feedback-subtitle">
+            How was your ride experience?
+        </p>
+
+        <div class="stars">
+            @for(star of [1,2,3,4,5]; track star){
+                <button
+                    class="star"
+                    [class.active]="rating() >= star"
+                    (click)="setRating(star)">
+                    ★
+                </button>
+            }
+        </div>
+
+        <textarea
+            #msg
+            class="feedback-input"
+            placeholder="Write feedback (optional)"
+            (input)="feedback.set(msg.value)">
+        </textarea>
+
+        <div class="actions">
+
+            <button
+                class="primary-btn"
+                (click)="submitFeedback()">
+                Submit Feedback
+            </button>
+
+            <button
+                class="secondary-btn"
+                (click)="goHome()">
+                Go Home
+            </button>
+
+        </div>
+
+    </div>
 </div>
 }
 
@@ -149,14 +214,15 @@
 <div class="ride-page">
 
     <h1 class="title">Ride Cancelled</h1>
+
     <p class="subtitle">
         No drivers were available for this request.
     </p>
 
     <div class="status-card">
         <button
-            routerLink="/ride-request"
-            class="primary-btn">
+            class="primary-btn"
+            (click)="bookAgain()">
             Book Again
         </button>
     </div>

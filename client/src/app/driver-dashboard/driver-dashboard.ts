@@ -16,13 +16,15 @@ import { interval, Subscription } from 'rxjs';
 })
 export class DriverDashboard implements OnInit, OnDestroy {
 
+  reviews = signal<any[]>([]);
+
   driver = signal({
     id: 'd1',
     name: 'Ramesh Kumar',
     email: 'ramesh@email.com',
     vehicle: 'Sedan',
     vehicleNo: 'KA01AB1234',
-    rating: 4.8,
+    rating: 0,
     online: true,
   });
 
@@ -51,6 +53,40 @@ export class DriverDashboard implements OnInit, OnDestroy {
   }
 
   refresh() {
+    const history = JSON.parse(
+      localStorage.getItem('rideHistory') || '[]'
+    );
+
+    const driverId = this.driver().id;
+
+
+    const ratedRides = history.filter(
+      (ride: any) =>
+        ride.driverId === driverId &&
+        ride.rating
+    );
+
+    this.reviews.set(
+      [...ratedRides]
+        .reverse()
+        .slice(0, 5)
+    );
+
+
+    const avgRating =
+      ratedRides.length > 0
+        ? ratedRides.reduce(
+            (sum: number, ride: any) =>
+              sum + ride.rating,
+            0
+          ) / ratedRides.length
+        : 0;
+
+    this.driver.update(driver => ({
+      ...driver,
+      rating: Number(avgRating.toFixed(1))
+    }));
+
     const ride = JSON.parse(
       localStorage.getItem('activeRide') || 'null'
     );
@@ -102,6 +138,7 @@ export class DriverDashboard implements OnInit, OnDestroy {
         vehicle: driver.vehicle,
         vehicleNo: driver.vehicleNo,
         rating: driver.rating,
+        phone: '+91 9876543210',
       }
     };
 
@@ -137,11 +174,13 @@ export class DriverDashboard implements OnInit, OnDestroy {
 
   completeRide() {
     const ride = this.activeRide();
+
     if (!ride) return;
 
     const completedRide = {
       ...ride,
-      status: 'COMPLETED'
+      status: 'COMPLETED',
+      completedAt: Date.now(),
     };
 
     const history = JSON.parse(
@@ -155,7 +194,10 @@ export class DriverDashboard implements OnInit, OnDestroy {
       JSON.stringify(history)
     );
 
-    localStorage.removeItem('activeRide');
+    localStorage.setItem(
+      'activeRide',
+      JSON.stringify(completedRide)
+    );
 
     this.refresh();
   }
