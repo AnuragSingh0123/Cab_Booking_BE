@@ -22,7 +22,7 @@ export class Login {
     console.log(password);
 
     let userData = {
-      name:"Anurag",
+      name:"Rahol",
       email,
       password,
       isLoggedIn: true

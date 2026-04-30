@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -10,6 +11,7 @@ import { Component } from '@angular/core';
 export class Profile {
     user:any;
   
+    router = inject(Router);
   ngOnInit() {
   const userData = localStorage.getItem("user");
 
@@ -18,4 +20,12 @@ export class Profile {
   }
 }
 
+
+//navigation from dropdown menus
+  go_to_ride(){
+    this.router.navigate(['']);
+  }
+  mytrip(){
+    this.router.navigate(['my-trips'])
+  }
 }
