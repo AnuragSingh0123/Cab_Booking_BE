@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import * as L from 'leaflet';
 import { RideService } from '../ride-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-map',
@@ -12,6 +13,8 @@ export class Map {
 
   private rideService = inject(RideService);
   private http = inject(HttpClient);
+
+  router=inject(Router);
 
   map: any;
 
@@ -24,26 +27,38 @@ export class Map {
 
   apiKey = 'pk.2291756e6d48580b693a0848389717a5';
 
-  ngOnInit() {
-    this.rideService.ride$.subscribe((data) => {
-      this.pickup = data.pickUp;
-      this.drop = data.drop;
+  constructor() {
+  let lastPickup = '';
+  let lastDrop = '';
 
-      if (this.pickup && this.drop && this.map) {
-        this.getRouteFromNames();
-      }
-    });
-  }
+  effect(() => {
+    const ride = this.rideService.booking();
+
+    if (!this.map) return;
+    if (!ride.pickup || !ride.drop) return;
+
+    if (
+      ride.pickup === lastPickup &&
+      ride.drop === lastDrop
+    ) {
+      return;
+    }
+
+    lastPickup = ride.pickup;
+    lastDrop = ride.drop;
+
+    this.getRouteFromNames(
+      ride.pickup,
+      ride.drop
+    );
+  });
+}
 
   ngAfterViewInit() {
     this.map = L.map('map').setView([13.0475, 77.6200], 10);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
       .addTo(this.map);
-
-    if (this.pickup && this.drop) {
-      this.getRouteFromNames();
-    }
   }
 
   //Convert place → coordinates
@@ -66,6 +81,10 @@ export class Map {
       const distanceKm = (route.distance / 1000).toFixed(2);
       const durationMin = (route.duration / 60).toFixed(0);
 
+      this.rideService.updateRide({
+        distance: distanceKm,
+        duration: durationMin
+      });
       this.rideService.setRideDetails(distanceKm,durationMin);
 
       console.log('Distance:', distanceKm, 'km');
@@ -130,31 +149,28 @@ export class Map {
     .bindPopup('Drop');
 
   this.map.fitBounds(this.routeLine.getBounds());
-
+  this.router.navigate(["vehicle"]);
   this.rideService.setLoading(false);
 }
 
   //Convert names → route
-  getRouteFromNames() {
+  getRouteFromNames(pickup: string, drop: string) {
+  this.rideService.setLoading(true);
 
-    this.rideService.setLoading(true);
+  this.getCoordinates(pickup).subscribe((startRes: any) => {
+    const start = {
+      lat: +startRes[0].lat,
+      lng: +startRes[0].lon
+    };
 
-    this.getCoordinates(this.pickup).subscribe((startRes: any) => {
-
-      const start = {
-        lat: parseFloat(startRes[0].lat),
-        lng: parseFloat(startRes[0].lon)
+    this.getCoordinates(drop).subscribe((endRes: any) => {
+      const end = {
+        lat: +endRes[0].lat,
+        lng: +endRes[0].lon
       };
 
-      this.getCoordinates(this.drop).subscribe((endRes: any) => {
-
-        const end = {
-          lat: parseFloat(endRes[0].lat),
-          lng: parseFloat(endRes[0].lon)
-        };
-
-        this.getRoute(start, end);
-      });
+      this.getRoute(start, end);
     });
-  }
+  });
+}
 }

@@ -7,9 +7,16 @@ import { RideSuccess } from './ride-success/ride-success';
 import { Profile } from './profile/profile';
 import { DriverDashboard } from './driver-dashboard/driver-dashboard';
 import { MyTrips } from './my-trips/my-trips';
+import { RideRequest } from './ride-request/ride-request';
+import { VehicleSelection } from './vehicle-selection/vehicle-selection';
+import { Checkout } from './checkout/checkout';
 
 export const routes: Routes = [
-  { path: "", component: Home },
+  { path: "", component: Home, children:[
+    {path:"", component: RideRequest},
+    {path: "vehicle", component: VehicleSelection},
+    {path: "checkout", component: Checkout}
+  ] },
   { path: "login", component: Login },
   { path: "sign-up", component: SignUp },
   {path: "profile", component: Profile},
