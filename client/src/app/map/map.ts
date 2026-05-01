@@ -96,7 +96,6 @@ export class Map {
         distance: distanceKm,
         duration: durationMin
       });
-      this.rideService.setRideDetails(distanceKm,durationMin);
 
       console.log('Distance:', distanceKm, 'km');
       console.log('Time:', durationMin, 'minutes');

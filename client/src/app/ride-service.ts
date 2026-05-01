@@ -9,6 +9,7 @@ export class RideService {
 
 
   mapLoading = signal(false);
+  router=inject(Router);
 
   booking = signal<any>({
     pickup: '',
@@ -30,8 +31,6 @@ export class RideService {
     console.log(this.booking());
   }
 
-
-  router=inject(Router);
 
   bookRide(rideData: any) {
   let { pickup, drop, fare, gst, vehicle, distance } = rideData;
@@ -78,37 +77,12 @@ export class RideService {
     this.loadingSubject.next(val);
   }
 
-  rideDetailsSubject = new BehaviorSubject<any>({
-    Distance: '',
-    Time: ''
-  })
-
   msgSubject = new BehaviorSubject<String>('')
 
   msg$=this.msgSubject;
 
-  rideDetails$ = this.rideDetailsSubject;
-
   setMsg(msg:string){
     this.msgSubject.next(msg);
   }
-
-  setRideDetails(distance:string, time:string) {
-    console.log("here.........")
-    console.log(distance, time);
-    if(Number(distance)>60){
-      this.msgSubject.next(
-      "We can't process rides beyond 60 km from pickup"
-    );
-      return;
-    }
-
-    this.msgSubject.next('');
-    this.rideDetailsSubject.next({distance, time});
-    console.log("executing");
-    this.router.navigate(["new"]);
-    console.log("executed");
-  }
-
 
 }

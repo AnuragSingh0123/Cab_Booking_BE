@@ -15,6 +15,7 @@ import { LocationService } from '../location-service';
 })
 export class RideRequest {
 
+  router=inject(Router);
   pickup: string = '';
   drop: string = '';
 
@@ -23,7 +24,6 @@ export class RideRequest {
   locationService = inject(LocationService);
 
   loading$ = this.rideService.loading$;
-  rideDetails$ = this.rideService.rideDetails$;
   msg$ = this.rideService.msg$;
 
   pickupSuggestions: any[] = [];
@@ -33,6 +33,13 @@ export class RideRequest {
   dropSubject = new Subject<string>();
 
   ngOnInit() {
+
+    const user = JSON.parse(localStorage.getItem('user') || 'null');
+
+  if (user?.role === 'driver') {
+    this.router.navigate(['/driver-dashboard']);
+    return;
+  }
 
     this.pickupSubject.pipe(
       debounceTime(300),
@@ -90,16 +97,14 @@ export class RideRequest {
   msgTimeout:any;
 
 rideRequest() {
-  const user = JSON.parse(
-    localStorage.getItem('user') || 'null'
-  );
 
-  const loginStatus = user?.isLoggedIn;
+  const user = JSON.parse(localStorage.getItem('user') || 'null');
+  const token = localStorage.getItem('token');
+
+  const isLoggedIn = !!user && !!token;
 
   if (!this.pickup.trim() || !this.drop.trim()) {
-    this.rideService.setMsg(
-      'Please enter pickup and drop location'
-    );
+    this.rideService.setMsg('Please enter pickup and drop location');
 
     clearTimeout(this.msgTimeout);
 
@@ -110,19 +115,23 @@ rideRequest() {
     return;
   }
 
-  // save ride draft
+
   this.rideService.updateRide({
     pickup: this.pickup,
     drop: this.drop
   });
 
-  // not logged in
-  if (!loginStatus) {
+
+  if (user?.role === 'driver') {
+    this.route.navigate(['/driver-dashboard']);
+    return;
+  }
+
+  if (!isLoggedIn) {
     this.route.navigate(['/login']);
     return;
   }
 
-  // logged in
   this.route.navigate(['/vehicle']);
 }
 
