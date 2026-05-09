@@ -77,7 +77,18 @@ export class DriverDashboard implements OnInit, OnDestroy {
       next: (data: any) => {
 
         this.reviews.set(data?.reviews ?? []);
-        this.availableRide.set(data?.availableRide ?? null);
+        const availableRide = data?.availableRide ?? null;
+
+if (
+  availableRide &&
+  this.driver().vehicle &&
+  availableRide.vehicle &&
+  this.driver().vehicle.toLowerCase() === availableRide.vehicle.toLowerCase()
+) {
+  this.availableRide.set(availableRide);
+} else {
+  this.availableRide.set(null);
+}
         this.activeRide.set(data?.activeRide ?? null);
 
         this.driver.update(d => ({

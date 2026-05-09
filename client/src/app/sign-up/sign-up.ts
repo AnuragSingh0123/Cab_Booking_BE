@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../auth-service';
 
 @Component({
@@ -12,6 +12,8 @@ import { AuthService } from '../auth-service';
 })
 export class SignUp {
 
+
+  router=inject(Router);
 
   formBuilder=inject(FormBuilder);
   activatedRoute = inject(ActivatedRoute);
@@ -28,6 +30,12 @@ export class SignUp {
 });
 
   ngOnInit(){
+
+    const user = localStorage.getItem('user');
+
+  if (user) {
+    this.router.navigate(['/']);
+  }
     // if we use subscribe, event fires if queryParms changes even after component is already rendered
     // which doesnt work with queryParamsMap
     this.activatedRoute.queryParamMap.subscribe(params => {
@@ -63,7 +71,10 @@ export class SignUp {
   };
 
   this.authService.signUp(formData).subscribe({
-    next: res => console.log(res),
+    next: res => {
+      console.log(res)
+      this.router.navigate(["/login"]);
+    },
     error: err => console.log(err)
   });
 }

@@ -18,6 +18,7 @@ export class AuthService {
 
 
   login(data: any) {
+    console.log(data);
     return this.http.post('http://localhost:3000/auth/login', data);
   }
 

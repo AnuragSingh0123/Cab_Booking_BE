@@ -11,6 +11,7 @@ import { RideRequest } from './ride-request/ride-request';
 import { VehicleSelection } from './vehicle-selection/vehicle-selection';
 import { Checkout } from './checkout/checkout';
 import { authGuard } from './auth-guard';
+import { NotFound } from './not-found/not-found';
 
 export const routes: Routes = [
   { path: "", component: Home, children:[
@@ -24,5 +25,6 @@ export const routes: Routes = [
   {path: "my-trips", component: MyTrips, canActivate: [authGuard], data: {roles: ['rider']}},
   {path: "driver-dashboard", component: DriverDashboard, canActivate: [authGuard], data: {roles: ['driver']}},
   { path: "map", component: Map },
-  { path: "ride-booked", component:RideSuccess }
+  { path: "ride-booked", component:RideSuccess },
+  { path: "**", component: NotFound }
 ];
