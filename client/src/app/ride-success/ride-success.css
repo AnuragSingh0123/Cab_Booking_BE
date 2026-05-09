@@ -1,256 +1,154 @@
-.ride-page{
-    display:flex;
-    flex-direction:column;
-    gap:24px;
-    width:100%;
+.ride-page {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
 }
 
-.title{
-    margin:0;
-    font-size:40px;
-    font-weight:900;
-    color:#111;
+.title {
+    margin: 0;
+    font-size: 38px;
+    font-weight: 900;
+    color: #111;
 }
 
-.subtitle{
-    margin:-10px 0 0;
-    font-size:15px;
-    color:#666;
+.subtitle {
+    margin: -8px 0 0;
+    font-size: 15px;
+    color: #666;
 }
 
 .status-card,
-.driver-card{
-    background:#f8f9fa;
-    border:1px solid #e5e7eb;
-    border-radius:14px;
-    padding:24px;
+.driver-card,
+.feedback-card {
+    background: #f8f9fa;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 24px;
 }
 
-.searching-card{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:20px;
+.searching-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
 }
 
-.spinner{
-    width:54px;
-    height:54px;
-    border-radius:50%;
-    border:4px solid #ddd;
-    border-top:4px solid black;
-    animation:spin 1s linear infinite;
+.spinner {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 4px solid #ddd;
+    border-top: 4px solid #111;
+    animation: spin 1s linear infinite;
 }
 
-@keyframes spin{
-    to{
-        transform:rotate(360deg);
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
     }
 }
 
-.status-text{
-    margin:0;
-    font-size:16px;
-    font-weight:600;
+.progress-wrapper {
+    width: 100%;
+    height: 10px;
+    border-radius: 999px;
+    background: #e5e7eb;
+    overflow: hidden;
 }
 
-.timer-card{
-    font-size:36px;
-    font-weight:800;
-    letter-spacing:2px;
+.progress-bar {
+    height: 100%;
+    background: #111;
+    border-radius: 999px;
+    transition: width 1s linear;
 }
 
-.driver-top{
-    display:flex;
-    gap:18px;
-    align-items:center;
+.avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #111;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 14px;
 }
 
-.avatar{
-    width:70px;
-    height:70px;
-    border-radius:50%;
-    background:black;
-    color:white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:28px;
-    font-weight:700;
+.driver-card {
+    text-align: center;
 }
 
-.name{
-    margin:0;
-    font-size:22px;
-    font-weight:700;
+.driver-card p {
+    margin: 6px 0;
+    color: #444;
 }
 
-.meta,
-.rating{
-    margin:4px 0 0;
-    color:#666;
-    font-size:14px;
-}
-
-.divider{
-    height:1px;
-    background:#e5e7eb;
-    margin:18px 0;
-}
-
-.info-row,
-.route-row{
-    display:flex;
-    justify-content:space-between;
-    gap:16px;
-    padding:10px 0;
-}
-
-.label{
-    font-size:12px;
-    font-weight:700;
-    color:#6b7280;
-}
-
-.value{
-    text-align:right;
-    font-weight:600;
-    color:#111;
-}
-
-.route-box{
-    margin-top:10px;
-}
-
-.actions{
-    display:flex;
-    gap:12px;
-    margin-top:22px;
-}
-
-.primary-btn,
 .cancel-btn,
-.call-btn{
-    flex:1;
-    padding:14px;
-    border:none;
-    border-radius:10px;
-    font-size:15px;
-    font-weight:600;
-    cursor:pointer;
-    text-decoration:none;
-    text-align:center;
+.feedback-card button,
+.ride-page > button {
+    padding: 14px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    background: #111;
+    color: white;
+    transition: 0.2s;
 }
 
-.primary-btn,
-.call-btn{
-    background:black;
-    color:white;
+.cancel-btn {
+    background: #ef4444;
 }
 
-.cancel-btn{
-    background:#ef4444;
-    color:white;
+.cancel-btn:hover {
+    background: #dc2626;
 }
 
-.status-big{
-    margin:0;
-    text-align:center;
-    font-size:26px;
-    font-weight:800;
+.feedback-card button:hover,
+.ride-page > button:hover {
+    opacity: 0.9;
 }
 
-.success-card{
-    text-align:center;
+.stars {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
 }
 
-.fare{
-    margin:14px 0 0;
-    font-size:36px;
-    font-weight:900;
+.stars button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 34px;
+    color: #d1d5db;
+    padding: 0;
+    transition: 0.2s;
 }
 
-.progress-wrapper{
-    width:100%;
-    height:10px;
-    border-radius:100px;
-    background:#e5e7eb;
-    overflow:hidden;
+.stars button.active {
+    color: #111;
 }
 
-.progress-bar{
-    height:100%;
-    width:100%;
-    background:black;
-    border-radius:100px;
-    transition:width 1s linear;
+textarea {
+    width: 100%;
+    min-height: 110px;
+    resize: none;
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    background: white;
+    font-size: 14px;
+    margin-bottom: 18px;
+    outline: none;
+    box-sizing: border-box;
 }
 
-.progress-text{
-    margin:0;
-    font-size:14px;
-    color:#666;
-}
-
-.feedback-card{
-    background:#f8f9fa;
-    border:1px solid #e5e7eb;
-    border-radius:14px;
-    padding:24px;
-}
-
-.feedback-title{
-    margin:0;
-    font-size:22px;
-    font-weight:700;
-    color:#111;
-}
-
-.feedback-subtitle{
-    margin:6px 0 20px;
-    color:#666;
-    font-size:14px;
-}
-
-.stars{
-    display:flex;
-    gap:10px;
-    margin-bottom:20px;
-}
-
-.star{
-    border:none;
-    background:none;
-    cursor:pointer;
-    font-size:34px;
-    color:#d1d5db;
-    padding:0;
-}
-
-.star.active{
-    color:black;
-}
-
-.feedback-input{
-    width:100%;
-    min-height:110px;
-    resize:none;
-    padding:14px;
-    border-radius:10px;
-    border:none;
-    background:#eef1f4;
-    font-size:14px;
-    margin-bottom:20px;
-    outline:none;
-}
-
-.secondary-btn{
-    flex:1;
-    padding:14px;
-    border-radius:10px;
-    border:1px solid #d1d5db;
-    background:white;
-    font-size:15px;
-    font-weight:600;
-    cursor:pointer;
+textarea:focus {
+    border-color: #111;
 }

@@ -4,10 +4,12 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
+const connectDB = require("./config/connectDB");
 const User = require("./models/user");
 const Driver = require("./models/driver");
 const Booking = require("./models/booking");
+const Review = require("./models/review");
+const authRoutes = require("./routes/authRoutes");
 
 app.use(cors());
 app.use(express.json());
@@ -15,108 +17,9 @@ app.use(express.json());
 const JWT_SECRET = "super_secret_key";
 
 
-const connectDB = async () => {
-  try {
-    await mongoose.connect("mongodb://127.0.0.1:27017/cab_db");
-    console.log("Connected to Database");
-  } catch (err) {
-    console.log("DB Error:", err);
-  }
-};
 
 
-app.post("/auth/sign-up", async (req, res) => {
-  try {
-    const {
-      name,
-      email,
-      password,
-      role,
-      licenseNumber,
-      vehicleType,
-      vehicleNumber
-    } = req.body;
-
-    const existingUser = await User.findOne({ email });
-
-    if (existingUser) {
-      return res.status(400).json({
-        message: "User already exists"
-      });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = await User.create({
-      name,
-      email,
-      password: hashedPassword,
-      role: role || "rider"
-    });
-
-    if (role === "driver") {
-      await Driver.create({
-        userId: user._id,
-        licenseNumber,
-        vehicleType,
-        vehicleNumber
-      });
-    }
-
-    res.status(201).json({
-      message: `${role || "rider"} created successfully`
-    });
-
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({
-      message: "Signup error"
-    });
-  }
-});
-
-app.post("/auth/login", async (req, res) => {
-  console.log(req.body);
-  try {
-    const { email, password } = req.body;
-
-    const user = await User.findOne({ email });
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-
-    if (!isMatch) {
-      return res.status(401).json({ message: "Invalid credentials" });
-    }
-
-    const token = jwt.sign(
-      {
-        id: user._id,
-        role: user.role
-      },
-      JWT_SECRET,
-      { expiresIn: "7d" }
-    );
-
-    return res.status(200).json({
-      message: "Login successful",
-      token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role
-      }
-    });
-
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Server error" });
-  }
-});
+app.use("/auth", authRoutes);
 
 
 const authMiddleware = (req, res, next) => {
@@ -145,7 +48,6 @@ const authMiddleware = (req, res, next) => {
 
 
 app.post("/book-ride", authMiddleware, async (req, res) => {
-  console.log("here........");
   try {
     const booking = await Booking.create({
       ...req.body,
@@ -165,7 +67,6 @@ app.post("/book-ride", authMiddleware, async (req, res) => {
 });
 
 app.get("/my-bookings", authMiddleware, async (req, res) => {
-  console.log("my-bookings route hit");
 
   try {
     const bookings = await Booking.find({
@@ -208,12 +109,15 @@ app.get("/driver/dashboard", authMiddleware, async (req, res) => {
       }
     }).sort({ createdAt: -1 });
 
-    const reviews = await Booking.find({
-      driverId: req.user.id,
-      rating: { $exists: true }
-    })
-      .sort({ completedAt: -1 })
-      .limit(5);
+    
+
+      const reviews = await Review.find({
+  driverId: req.user.id
+})
+  .populate('bookingId', 'pickup drop total')
+  .sort({ createdAt: -1 })
+  .limit(5);
+
 
     const completed = await Booking.find({
       driverId: req.user.id,
@@ -297,8 +201,6 @@ app.patch("/booking/:id", authMiddleware, async (req, res) => {
     }
 
     const { status, completedAt } = req.body;
-    console.log(status);
-    console.log(completedAt);
 
     booking.status = status;
 
@@ -319,6 +221,74 @@ app.patch("/booking/:id", authMiddleware, async (req, res) => {
     res.status(500).json({
       message: "Update failed"
     });
+  }
+});
+
+app.get("/user/booking/:id", async (req, res) => {
+  try {
+    const booking = await Booking.findById(req.params.id);
+
+    if (!booking) {
+      return res.status(404).json({
+        message: "Booking not found"
+      });
+    }
+
+    let driver = null;
+
+    if (booking.driverId) {
+      const driverDetails = await Driver.findOne({
+        userId: booking.driverId
+      });
+
+      const userDetails = await User.findById(
+        booking.driverId
+      ).select("-password");
+
+      driver = {
+        id: userDetails._id,
+        name: userDetails.name,
+        email: userDetails.email,
+        vehicle: driverDetails.vehicleType,
+        vehicleNo: driverDetails.vehicleNumber,
+        license: driverDetails.licenseNumber,
+        available: driverDetails.isAvailable
+      };
+    }
+
+    res.json({
+      booking,
+      driver
+    });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Error"
+    });
+  }
+});
+
+
+app.post('/user/feedback', async (req, res) => {
+  try {
+    const { driverId, rating, feedback, bookingId } = req.body;
+
+    const review = await Review.create({
+      bookingId,
+      driverId,
+      rating,
+      feedback
+    });
+
+    res.status(201).json({
+      message: 'Feedback saved',
+      review
+    });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Internal Server Error');
   }
 });
 

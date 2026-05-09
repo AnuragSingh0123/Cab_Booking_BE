@@ -14,7 +14,7 @@
             <p class="meta">
     {{driver().vehicle}} •
     {{driver().vehicleNo}} •
-    ⭐ {{driver().rating || 'New'}}
+    ⭐ {{ reviews().length ? (getAverageRating() | number) : 'New' }}
 </p>
         </div>
     </div>
@@ -42,22 +42,22 @@
     <div class="stats-grid">
         <div class="stat-card">
             <span>Trips</span>
-            <strong>{{stats().trips}}</strong>
+            <strong>{{stats().trips |number}}</strong>
         </div>
 
         <div class="stat-card">
             <span>Earnings</span>
-            <strong>₹ {{stats().earnings}}</strong>
+            <strong>₹ {{stats().earnings |number}}</strong>
         </div>
 
         <div class="stat-card">
             <span>Distance</span>
-            <strong>{{stats().distance}} km</strong>
+            <strong>{{stats().distance |number}} km</strong>
         </div>
 
         <div class="stat-card">
             <span>Hours</span>
-            <strong>{{stats().hours}}</strong>
+            <strong>{{stats().hours | number}}</strong>
         </div>
     </div>
 
@@ -176,7 +176,7 @@
 
         <div class="review-list">
 
-            @for(review of reviews(); track review.reviewedAt){
+            @for(review of reviews(); track review.createdAt){
             <div class="review-card">
 
                 <div class="review-top">
@@ -186,7 +186,7 @@
                     </span>
 
                     <span class="fare">
-                        ₹ {{review.total}}
+                        ₹ {{review.bookingId.total}}
                     </span>
                 </div>
 
@@ -197,7 +197,7 @@
                 }
 
                 <p class="route">
-                    {{review.pickup}} → {{review.drop}}
+                    {{review.bookingId.pickup}} → {{review.bookingId.drop}}
                 </p>
 
             </div>

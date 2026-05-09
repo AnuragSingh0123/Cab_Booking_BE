@@ -23,6 +23,15 @@ export class DriverDashboard implements OnInit, OnDestroy {
   activeRide = signal<any | null>(null);
   availableRide = signal<any | null>(null);
 
+  getAverageRating(): number {
+  const list = this.reviews();
+
+  if (!list.length) return 0;
+
+  const total = list.reduce((sum, r) => sum + r.rating, 0);
+  return total / list.length;
+}
+
   driver = signal({
     id: '',
     name: '',
@@ -68,7 +77,18 @@ export class DriverDashboard implements OnInit, OnDestroy {
       next: (data: any) => {
 
         this.reviews.set(data?.reviews ?? []);
-        this.availableRide.set(data?.availableRide ?? null);
+        const availableRide = data?.availableRide ?? null;
+
+if (
+  availableRide &&
+  this.driver().vehicle &&
+  availableRide.vehicle &&
+  this.driver().vehicle.toLowerCase() === availableRide.vehicle.toLowerCase()
+) {
+  this.availableRide.set(availableRide);
+} else {
+  this.availableRide.set(null);
+}
         this.activeRide.set(data?.activeRide ?? null);
 
         this.driver.update(d => ({
@@ -85,6 +105,7 @@ export class DriverDashboard implements OnInit, OnDestroy {
           distance: data?.stats?.distance ?? 0,
           hours: data?.stats?.hours ?? 0
         });
+        console.log(this.reviews());
       },
       error: (err) => {
         console.log('dashboard error', err);

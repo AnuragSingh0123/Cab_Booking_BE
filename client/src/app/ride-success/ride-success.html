@@ -94,8 +94,9 @@
         </div>
 
         <textarea
-            (input)="feedback.set($any($event.target).value)">
-        </textarea>
+    [(ngModel)]="feedbackText"
+    placeholder="Write your feedback...">
+</textarea>
 
         <button (click)="submitFeedback()">
             Submit
