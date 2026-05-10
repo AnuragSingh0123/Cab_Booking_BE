@@ -293,10 +293,36 @@ app.post('/user/feedback', async (req, res) => {
 });
 
 
-app.get("/auth/profile", authMiddleware, async (req, res) => {
-  const user = await User.findById(req.user.id).select("-password");
+app.get("/profile", authMiddleware, async (req, res) => {
+  const user = await User.findById(req.user.id);
+  const id = user._id;
+  const role = user.role;
 
-  res.json(user);
+  let bookingData = [];
+
+  if (role === "rider") {
+    bookingData = await Booking.find({ riderId: id });
+  } else if (role === "driver") {
+    bookingData = await Booking.find({ driverId: id });
+  }
+
+  const totalRides = bookingData.length;
+
+  const distanceTravelled = bookingData.reduce(
+    (sum, ride) => sum + ride.distance,
+    0
+  );
+
+  const totalSpent = bookingData.reduce(
+    (sum, ride) => sum + ride.total,
+    0
+  );
+
+  res.json({
+    totalRides,
+    distanceTravelled,
+    totalSpent
+  });
 });
 
 

@@ -141,4 +141,17 @@ export class RideService {
   );
 }
 
+  getProfile() {
+  const token = localStorage.getItem('token');
+
+  return this.http.get(
+    'http://localhost:3000/profile',
+    {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${token}`
+      })
+    }
+  );
+}
+
 }
