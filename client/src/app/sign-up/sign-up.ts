@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../auth-service';
+import { PopupService } from '../popup-service';
 
 @Component({
   selector: 'app-sign-up',
@@ -12,6 +13,7 @@ import { AuthService } from '../auth-service';
 })
 export class SignUp {
 
+  notify=inject(PopupService);
 
   router=inject(Router);
 
@@ -73,9 +75,13 @@ export class SignUp {
   this.authService.signUp(formData).subscribe({
     next: res => {
       console.log(res)
+      this.notify.show("Registration Successful");
       this.router.navigate(["/login"]);
     },
-    error: err => console.log(err)
+    error: err => {
+      console.log(err),
+    this.notify.show("Error while registration. Please try again later")
+  }
   });
 }
 }

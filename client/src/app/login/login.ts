@@ -4,6 +4,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth-service';
 import { RideService } from '../ride-service';
+import { PopupService } from '../popup-service';
 
 @Component({
   selector: 'app-login',
@@ -14,6 +15,7 @@ import { RideService } from '../ride-service';
 })
 export class Login{
 
+  notify = inject(PopupService);
   
   router = inject(Router);
   authService = inject(AuthService);
@@ -48,6 +50,8 @@ export class Login{
         this.authService.setSession(res);
 
         const ride = this.ride();
+
+        this.notify.show("Login Successfully");
 
         if (ride?.pickup && ride?.drop) {
           this.router.navigate(['/vehicle']);

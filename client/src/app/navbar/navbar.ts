@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../auth-service';
+import { PopupService } from '../popup-service';
 
 @Component({
   selector: 'app-navbar',
@@ -10,6 +11,8 @@ import { AuthService } from '../auth-service';
   styleUrl: './navbar.css',
 })
 export class Navbar {
+
+  notify=inject(PopupService);
 
   auth = inject(AuthService);
 
@@ -22,6 +25,7 @@ export class Navbar {
   logout() {
     this.auth.logout();
     this.showMenu = false;
+    this.notify.show("Logged out Successfully");
   }
 
   get firstLetter(): string {

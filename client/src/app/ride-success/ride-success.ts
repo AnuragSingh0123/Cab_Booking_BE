@@ -10,6 +10,7 @@ import { Router, RouterModule } from '@angular/router';
 import { interval, Subscription } from 'rxjs';
 import { RideService } from '../ride-service';
 import { FormsModule } from '@angular/forms';
+import { PopupService } from '../popup-service';
 
 @Component({
   selector: 'app-ride-success',
@@ -21,6 +22,7 @@ import { FormsModule } from '@angular/forms';
 export class RideSuccess implements OnInit, OnDestroy {
   router = inject(Router);
   rideService = inject(RideService);
+  notify=inject(PopupService);
 
   activeRide = signal<any>(null);
   progress = signal(100);
@@ -120,7 +122,7 @@ export class RideSuccess implements OnInit, OnDestroy {
       }
     )
 
-    alert('Feedback submitted');
+    this.notify.show("Feedback Submitted");
     this.goHome();
   }
 
