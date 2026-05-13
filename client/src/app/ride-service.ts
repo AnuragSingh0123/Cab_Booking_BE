@@ -12,6 +12,8 @@ export class RideService {
   mapLoading = signal(false);
   router=inject(Router);
 
+  msg=signal('');
+
   booking = signal<any>({
     pickup: '',
     drop: '',

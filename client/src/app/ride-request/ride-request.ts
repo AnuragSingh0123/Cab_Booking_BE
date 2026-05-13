@@ -27,7 +27,7 @@ export class RideRequest {
   pickupSuggestions: any[] = [];
   dropSuggestions: any[] = [];
 
-  msg = signal('');
+  message=this.rideService.msg;
 
   pickupSubject = new Subject<string>();
   dropSubject = new Subject<string>();
@@ -95,10 +95,10 @@ export class RideRequest {
   rideRequest() {
 
     if (!this.pickup.trim() || !this.drop.trim()) {
-      this.msg.set('Enter pickup and drop location');
+      this.rideService.msg.set('Enter pickup and drop location');
 
     setTimeout(() => {
-      this.msg.set('');
+      this.rideService.msg.set('');
     }, 3000);
       return;
     }
@@ -114,7 +114,5 @@ export class RideRequest {
       this.router.navigate(['/login']);
       return;
     }
-
-    this.router.navigate(['/vehicle']);
   }
 }

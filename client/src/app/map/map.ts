@@ -60,10 +60,18 @@ export class Map {
           const distanceKm = (route.distance / 1000).toFixed(2);
           const durationMin = (route.duration / 60).toFixed(0);
 
+          
+          if (Number(distanceKm) > 60) {
+  this.rideService.msg.set("Sorry, we can’t process rides over 60 km");
+  this.rideService.mapLoading.set(false);
+  return;
+}
+
           this.rideService.updateRide({
             distance: distanceKm,
             duration: durationMin,
           });
+
 
           const latlngs = route.geometry.coordinates.map(
             (c: any) => [c[1], c[0]]
