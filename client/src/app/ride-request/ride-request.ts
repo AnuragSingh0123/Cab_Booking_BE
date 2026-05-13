@@ -92,19 +92,14 @@ export class RideRequest {
     this.dropSuggestions = [];
   }
 
-  showMessage(text: string) {
+  rideRequest() {
 
-    this.msg.set(text);
+    if (!this.pickup.trim() || !this.drop.trim()) {
+      this.msg.set('Enter pickup and drop location');
 
     setTimeout(() => {
       this.msg.set('');
     }, 3000);
-  }
-
-  rideRequest() {
-
-    if (!this.pickup.trim() || !this.drop.trim()) {
-      this.showMessage('Enter pickup and drop location');
       return;
     }
 
