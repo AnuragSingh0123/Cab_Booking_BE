@@ -29,7 +29,11 @@ const driverSchema = new mongoose.Schema({
   driverLocation:{
     type:String,
     required:false
-  } 
+  },
+driverCoordinates: {
+  lat: { type: Number, required: false },
+  lon: { type: Number, required: false }
+}
     
 }, {
   timestamps: true

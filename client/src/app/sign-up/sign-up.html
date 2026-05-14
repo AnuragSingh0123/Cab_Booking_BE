@@ -169,7 +169,7 @@
 
                     </div>
 
-                    <div class="form-group">
+                    <!-- <div class="form-group">
 
                         <label class="form-label">
                             Current Address
@@ -177,19 +177,46 @@
 
                         <input
                             class="form-input"
-                            formControlName="licenseNumber"
+                            formControlName="currentAddress"
                             type="text"
-                            placeholder="Enter your License number"
+                            placeholder="Enter your current address"
                             required
                         >
 
-                        @if(signUpForm.get('licenseNumber')?.touched && signUpForm.get('licenseNumber')?.invalid){
+                        @if(signUpForm.get('currentAddress')?.touched && signUpForm.get('currentAddress')?.invalid){
                             <small class="error-text">
-                                License number is required
+                                Address is required
                             </small>
                         }
 
-                    </div>
+                    </div> -->
+
+                    <div class="form-group address-container">
+    <label class="form-label">Current Address</label>
+    
+    <input
+        class="form-input"
+        formControlName="driverLocation"
+        type="text"
+        placeholder="Enter your current address"
+        autocomplete="off"
+    >
+
+    <!-- Suggestions List -->
+    @if (currentAddressSuggestions.length > 0) {
+        <ul class="suggestions-dropdown">
+            @for (place of currentAddressSuggestions; track place) {
+                <li (click)="selectAddress(place)">
+                    {{ place.display_name }}
+                </li>
+            }
+        </ul>
+    }
+
+    @if(signUpForm.get('driverLocation')?.touched && signUpForm.get('driverLocation')?.invalid){
+        <small class="error-text">Address is required</small>
+    }
+</div>
 
                     <!-- Vehicle -->
                     <div class="form-group">

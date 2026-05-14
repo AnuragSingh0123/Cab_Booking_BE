@@ -13,8 +13,12 @@ exports.signUp = async (req, res) => {
       role,
       licenseNumber,
       vehicleType,
-      vehicleNumber
+      vehicleNumber,
+      driverLocation,
+      driverCoordinates
     } = req.body;
+
+    console.log(req.body);
 
     const existingUser = await User.findOne({ email });
 
@@ -38,7 +42,9 @@ exports.signUp = async (req, res) => {
         userId: user._id,
         licenseNumber,
         vehicleType,
-        vehicleNumber
+        vehicleNumber,
+        driverLocation,
+        driverCoordinates
       });
     }
 
