@@ -1,7 +1,4 @@
 import { Component, effect, inject} from '@angular/core';
-import { Router } from '@angular/router';
-import { GeoService } from '../geo-service';
-import { RouteService } from '../route-service';
 import { MapRenderService } from '../map-render-service';
 import { RideService } from '../ride-service';
 
