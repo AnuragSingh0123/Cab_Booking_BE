@@ -39,116 +39,55 @@
       </p>
     </div>
 
-    <!-- <div style="display: block;">
-
-      Enter Live Location
-      @if (user?.role === 'driver') {
-        <input type="text">
-
-        <button>Update Location</button>
-      }
-
-    </div> -->
-
-    
-
   </div>
 
   <!--By Aditya  -->
 
-  
-    @if(user?.role === 'driver'){
 
-      <div class="stat-card">
-        <span class="stat-label">
-          @if(!editLocation){
-            Current Location
-          }@else {
-            Enter Current Location
-          }
-        </span>
-        @if(editLocation) {
-                      
-                    <div class="input-group">
-                      <input type="text" [(ngModel)]="pickup" (input)="onPickupChange(pickup)" class="location-input"
-                        placeholder="Enter current city or coordinates..."> 
+  @if(user?.role === 'driver'){
 
-                      <div *ngIf="pickupSuggestions.length" class="dropdown">
-                            <div
-                                *ngFor="let place of pickupSuggestions"
-                                (click)="selectPickup(place)"
-                                class="dropdown-item">
-                                {{ place.display_name }}
-                            </div>
-                        </div>
-                  </div>
-                  
-        }@else {
-          <span style="display: inline-block; width: 600px;">{{rideDetails().driverLocation}}</span>
-        }
-      </div>
+  <div class="stat-card">
+    <span class="stat-label">
+      @if(!editLocation){
+      Current Location
+      }@else {
+      Enter Current Location
+      }
+    </span>
+    @if(editLocation) {
 
-      <div>
-        <button class="update-btn" style="border: none; margin-bottom: 10px;" (click)="updateLocation()">
-          @if(editLocation){
-            Update Location
-          }@else {
-            Change Location
-          }
-        </button>
-        
-        @if(editLocation){
+    <div class="input-group">
+      <input type="text" [(ngModel)]="pickup" (input)="onPickupChange(pickup)" class="location-input"
+        placeholder="Enter current city or coordinates...">
 
-          <button class="update-btn" style="border: none; margin-left: 20px;" (click)="editLocation = false">
-              Cancel
-          </button>
-        }
-        <!-- @if (editLocation) {
-              @if (user?.role === 'driver') {
-                    <div class="location-card">
-                      <h3 class="title">Enter Current Location</h3>
-                    <div class="input-group">
-                      <input type="text" [(ngModel)]="pickup" (input)="onPickupChange(pickup)" class="location-input"
-                        placeholder="Enter current city or coordinates..."> 
-
-                      <div *ngIf="pickupSuggestions.length" class="dropdown">
-                            <div
-                                *ngFor="let place of pickupSuggestions"
-                                (click)="selectPickup(place)"
-                                class="dropdown-item">
-                                {{ place.display_name }}
-                            </div>
-                        </div>
-                      
-                    </div>
-                  </div>
-                }
-          <button class="update-btn" style="border: none;" (click)="editLocation = false">
-            Cancel
-          </button>
-        } -->
-      </div>
-    }
-
-
-    <!-- @if (user?.role === 'driver') {
-        <div class="location-card">
-          <h3 class="title">Live Location</h3>
-        <div class="input-group">
-          <input type="text" [(ngModel)]="pickup" (input)="onPickupChange(pickup)" class="location-input"
-            placeholder="Enter current city or coordinates..."> 
-
-           <div *ngIf="pickupSuggestions.length" class="dropdown">
-                <div
-                    *ngFor="let place of pickupSuggestions"
-                    (click)="selectPickup(place)"
-                    class="dropdown-item">
-                    {{ place.display_name }}
-                </div>
-            </div>
-          
+      <div *ngIf="pickupSuggestions.length" class="dropdown">
+        <div *ngFor="let place of pickupSuggestions" (click)="selectPickup(place)" class="dropdown-item">
+          {{ place.display_name }}
         </div>
       </div>
-    } -->
+    </div>
+
+    }@else {
+    <span style="display: inline-block; width: 600px;">{{rideDetails().driverLocation}}</span>
+    }
+  </div>
+
+  <div>
+    <button class="update-btn" style="border: none; margin-bottom: 10px;" (click)="updateLocation()">
+      @if(editLocation){
+      Update Location
+      }@else {
+      Change Location
+      }
+    </button>
+
+    @if(editLocation){
+
+    <button class="update-btn" style="border: none; margin-left: 20px;" (click)="editLocation = false">
+      Cancel
+    </button>
+    }
+  </div>
+  }
 
 </div>

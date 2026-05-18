@@ -19,32 +19,28 @@ export class DriverService {
 
   getDriverDashboard() {
     return this.http.get(
-      'http://localhost:7000/api/driver/dashboard',
-      this.getHeaders()
+      'http://localhost:7000/api/driver/dashboard'
     );
   }
 
   toggleDriverStatus() {
     return this.http.patch(
       'http://localhost:7000/api/driver/status',
-      {},
-      this.getHeaders()
+      {}
     );
   }
 
   acceptRide(bookingId: string) {
     return this.http.patch(
       `http://localhost:7000/api/rides/${bookingId}`,
-      { status: 'accepted' },
-      this.getHeaders()
+      { status: 'accepted' }
     );
   }
 
   startRide(bookingId: string) {
     return this.http.patch(
       `http://localhost:7000/api/rides/${bookingId}`,
-      { status: 'started' },
-      this.getHeaders()
+      { status: 'started' }
     );
   }
 
@@ -54,16 +50,20 @@ export class DriverService {
       {
         status: 'completed',
         completedAt: Date.now(),
-      },
-      this.getHeaders()
+      }
     );
   }
 
-  addDirverLocation(place: string) {
+  addDirverLocation(place: string,driverCoordinates:Number[] ) {
+    let data={
+      place: place,
+      driverCoordinates: driverCoordinates
+    }
     return this.http.patch(
-      `http://localhost:7000/api/driver/location/${place}`,
-      {},
-      this.getHeaders()
+      `http://localhost:7000/api/driver/location`,
+      {
+        data
+      }
     );
   }
 }

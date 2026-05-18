@@ -11,12 +11,12 @@ import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })
 export class Profile {
-    user: any;
+  user: any;
 
   rideDetails = signal({
     totalRides: 0,
@@ -37,33 +37,33 @@ export class Profile {
 
   ngOnInit() {
     const userData = localStorage.getItem('user');
-    
+
     if (userData) {
       this.user = JSON.parse(userData);
-      
+
       this.rideService.getProfile().subscribe((res: any) => {
         console.log(res);
         this.rideDetails.set(res);
       });
     }
 
-        this.pickupSubject.pipe(
-          debounceTime(300),
-          distinctUntilChanged(),
-          switchMap(value => {
-            if (!value || value.trim().length < 3) {
-              this.pickupSuggestions = [];
-              return of([]);
-            }
-            return this.locationService.searchLocation(value);
-          })
-        ).subscribe((res: any) => {
-          this.pickupSuggestions = res || [];
-        });
-      }
-      
-      
-//----------------By Aditya--------------------------
+    this.pickupSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap(value => {
+        if (!value || value.trim().length < 3) {
+          this.pickupSuggestions = [];
+          return of([]);
+        }
+        return this.locationService.searchLocation(value);
+      })
+    ).subscribe((res: any) => {
+      this.pickupSuggestions = res || [];
+    });
+  }
+
+
+  //----------------By Aditya--------------------------
   onPickupChange(value: string) {
     if (!value || value.trim().length < 3) {
       this.pickupSuggestions = [];
@@ -71,48 +71,39 @@ export class Profile {
     this.pickupSubject.next(value);
   }
 
-  
+
+  driverCoordinates: Number[]= [];
 
   async selectPickup(place: any) {
+    console.log("Place is ", place);
+
+    this.driverCoordinates.push(place.lat,place.lon);
     this.pickup = place.display_name;
     this.pickupSuggestions = [];
   }
 
-  editLocation = false;
   
-  // updateLocation(){
-  //   this.editLocation = true;
-  //   let currentDetailsOfDriver = this.rideDetails();
 
-    
-  //   if(this.pickup)
-  //     {
-  //         this.driverService.addDirverLocation(this.pickup).subscribe(res=>{
-  //           console.log("location updated successfully",(res as any)?.driverLocation);
-  //           this.rideDetails().driverLocation = ((res as any).driverLocation);
-           
-  //           this.editLocation = false;
-  //         })
-  //     }
-
-  // }
+  editLocation = false;
 
   updateLocation() {
-  this.editLocation = true;
 
-  console.log("pickup  ", this.pickup);
-  if(this.pickup){
-  this.driverService.addDirverLocation(this.pickup).subscribe((res: any) => {
-    console.log("Location updated successfully", res?.driverLocation);
-  
-      const currentData = this.rideDetails();
-      currentData.driverLocation = res.driverLocation;
-      this.rideDetails.set({ ...currentData });
-      this.pickup = '';
-      this.editLocation = false;
-    });
+    this.editLocation = true;
+
+    if (this.pickup) {
+      this.driverService.addDirverLocation(this.pickup, this.driverCoordinates).subscribe((res: any) => {
+        
+        console.log("Location updated successfully", res?.driverLocation);
+
+        const currentData = this.rideDetails();
+        currentData.driverLocation = res.driverLocation;
+        this.rideDetails.set({ ...currentData });
+        this.pickup = '';
+        this.editLocation = false;
+
+      });
+    }
   }
-}
 
 
 }
