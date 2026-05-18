@@ -95,18 +95,16 @@ const toggleDriverStatus = async (req, res) => {
 // PATCH /api/driver/location/:place
 const updateDriverLocation = async (req, res) => {
   try {
-    console.log("hello");
 
     const user = await User.findById(req.user.id);
     const userId = user._id;
-    console.log("userId=", userId);
 
-    const driverLocation = req.params.place;
+    const {place, driverCoordinates} = req.body.data;
 
-    if (driverLocation) {
+    if (place) {
       const updateLocation = await Driver.findOneAndUpdate(
         { userId: userId },
-        { $set: { driverLocation: driverLocation } },
+        { $set: { driverLocation: place , driverCoordinates:driverCoordinates} },
         { returnDocument: "after" }
       );
 

@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { PopupService } from '../popup-service';
 import { LocationService } from '../location-service';
-import { GeoService } from '../geo-service';
+// import { GeoService } from '../geo-service';
 import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../auth-service';
@@ -19,7 +19,6 @@ export class DriverSignup {
 
   locationService = inject(LocationService);
 
-  geoService = inject(GeoService);
 
   router = inject(Router);
 

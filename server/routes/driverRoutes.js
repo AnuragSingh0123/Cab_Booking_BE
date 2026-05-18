@@ -14,6 +14,6 @@ router.get("/dashboard", authMiddleware, getDriverDashboard);
 router.patch("/status", authMiddleware, toggleDriverStatus);
 
 // PATCH /api/driver/location/:place — update driver location (was: PATCH /driverLocation/:place)
-router.patch("/location/:place", authMiddleware, updateDriverLocation);
+router.patch("/location", authMiddleware, updateDriverLocation);
 
 module.exports = router;
