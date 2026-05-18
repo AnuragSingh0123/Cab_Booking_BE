@@ -25,16 +25,15 @@
             <span class="label">STATUS</span>
 
             <p
-                class="status"
-                [class.online]="driver().online">
-                ● {{driver().online ? 'Online' : 'Offline'}}
+                [ngClass]="driverToggleStatus=='Online'?'green':'red'">
+                ● {{driverToggleStatus}}
             </p>
         </div>
 
         <button
             class="toggle-btn"
             (click)="toggleStatus()">
-            Go {{driver().online ? 'Offline' : 'Online'}}
+            Go {{driverToggleStatus}}
         </button>
     </div>
 

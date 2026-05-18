@@ -77,13 +77,15 @@
     margin-bottom:4px;
 }
 
-.status{
+.red{
     margin:0;
     font-weight:700;
     color:#dc2626;
 }
 
-.status.online{
+.green{
+     margin:0;
+    font-weight:700;
     color:#16a34a;
 }
 

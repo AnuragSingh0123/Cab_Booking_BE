@@ -2,6 +2,7 @@ import {
   Component,
   OnDestroy,
   OnInit,
+  Signal,
   inject,
   signal,
 } from '@angular/core';
@@ -24,7 +25,7 @@ export class DriverDashboard implements OnInit, OnDestroy {
   reviews = signal<any[]>([]);
   activeRide = signal<any | null>(null);
   availableRide = signal<any | null>(null);
-
+  driverToggleStatus: 'Online' | 'Offline' = 'Offline';
   driver = signal({
     id: '',
     name: '',
@@ -92,7 +93,9 @@ export class DriverDashboard implements OnInit, OnDestroy {
           this.driver().vehicle.toLowerCase() ===
             availableRide.vehicle.toLowerCase()
         ) {
-          this.availableRide.set(availableRide);
+          if(this.driverToggleStatus === "Online"){
+            this.availableRide.set(availableRide);
+          }
         } else {
           this.availableRide.set(null);
         }
@@ -136,11 +139,20 @@ export class DriverDashboard implements OnInit, OnDestroy {
   }
 
   toggleStatus() {
+  if (this.driverToggleStatus === 'Offline') {
     this.driverService.toggleDriverStatus().subscribe({
-      next: () => this.refresh(),
-      error: err => console.log(err),
+      next: () => {
+        this.driverToggleStatus = 'Online';
+        this.refresh();
+      },
+      error: (err) => console.error('Failed to go online:', err)
     });
+  } else {
+    this.driverToggleStatus = 'Offline';
+    this.driver.update(state => ({ ...state, online: false })); 
+    console.log('Went offline locally. API skipped.');
   }
+}
 
   acceptRide() {
     const rideId = this.availableRide()?._id;
