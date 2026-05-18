@@ -3,7 +3,7 @@ const Driver = require("../models/driver");
 const User = require("../models/user");
 const Review = require("../models/review");
 
-// GET /api/driver/dashboard
+
 const getDriverDashboard = async (req, res) => {
   try {
     const driver = await Driver.findOne({
@@ -66,7 +66,7 @@ const getDriverDashboard = async (req, res) => {
   }
 };
 
-// PATCH /api/driver/status
+
 const toggleDriverStatus = async (req, res) => {
   try {
     const driver = await Driver.findOne({
@@ -92,7 +92,7 @@ const toggleDriverStatus = async (req, res) => {
   }
 };
 
-// PATCH /api/driver/location/:place
+
 const updateDriverLocation = async (req, res) => {
   try {
 

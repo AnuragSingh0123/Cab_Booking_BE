@@ -30,6 +30,13 @@ export class RideSuccess implements OnInit, OnDestroy {
   activeRide = signal<any>(null);
   progress = signal(100);
   rating = signal(0);
+  liveETA = signal<number | null>(null);
+  liveED = signal<number | null>(null);
+  generatingETA=signal(false);
+  ETA = signal<number | null>(null);
+  ED = signal<number | null>(null);
+
+  etaInterval: any;
 
   feedbackText = '';
 
@@ -52,6 +59,11 @@ export class RideSuccess implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub?.unsubscribe();
+
+    if (this.etaInterval) {
+    clearInterval(this.etaInterval);
+  }
+
   }
 
   updateRide() {
@@ -141,6 +153,10 @@ export class RideSuccess implements OnInit, OnDestroy {
 
       this.ETA.set(durationMin);
       this.ED.set(distanceKm);
+      this.liveETA.set(durationMin);
+      this.liveED.set(distanceKm);
+
+      this.startETA();
 
       this.generatingETA.set(false);
     },
@@ -152,9 +168,37 @@ export class RideSuccess implements OnInit, OnDestroy {
   });
 }
 
-  generatingETA=signal(false);
-  ETA = signal<number | null>(null);
-  ED = signal<number | null>(null);
+  startETA(){
+    if(this.etaInterval) {
+      clearInterval(this.etaInterval);
+    }
+
+    this.etaInterval = setInterval(()=>{
+      let currentETA = this.liveETA();
+      let currentED = this.liveED();
+
+      if(currentETA === null || currentED === null) {
+        return;
+      }
+
+      if(currentETA <=0) {
+        this.liveETA.set(0);
+        this.liveED.set(0);
+        clearInterval(this.etaInterval);
+        return;
+      }
+
+      this.liveETA.set(Number((currentETA - 1).toFixed(0)));
+
+      const decreasePerMinute = (this.ED() || 0)/(this.ETA() || 1);
+
+      const newDistance = currentED - decreasePerMinute;
+
+      this.liveED.set(Number((newDistance).toFixed(2)));
+
+    }, 60000)
+  }
+
 
   cancelRide() {
     const rideId = this.activeRide()?._id;

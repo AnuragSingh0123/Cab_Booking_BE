@@ -2,7 +2,6 @@ const Booking = require("../models/booking");
 const Driver = require("../models/driver");
 const User = require("../models/user");
 
-// POST /api/rides
 const bookRide = async (req, res) => {
   try {
     const booking = await Booking.create({
@@ -22,7 +21,7 @@ const bookRide = async (req, res) => {
   }
 };
 
-// GET /api/rides  (rider's own bookings)
+
 const getMyBookings = async (req, res) => {
   try {
     const bookings = await Booking.find({
@@ -38,7 +37,7 @@ const getMyBookings = async (req, res) => {
   }
 };
 
-// GET /api/rides/:id  (public booking + driver details)
+
 const getBookingById = async (req, res) => {
   try {
     const booking = await Booking.findById(req.params.id);
@@ -84,7 +83,7 @@ const getBookingById = async (req, res) => {
   }
 };
 
-// PATCH /api/rides/:id  (update booking status — used by both rider cancel and driver accept/start/complete)
+
 const updateBooking = async (req, res) => {
   try {
     const booking = await Booking.findById(req.params.id);

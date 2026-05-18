@@ -33,33 +33,31 @@ export class RideService {
     }));
   }
 
-  // POST /api/rides
+
   bookRide(data: any) {
     return this.http.post('http://localhost:7000/api/rides', data);
   }
 
-  // PATCH /api/rides/:id
   cancelBooking(id: string, data: any) {
     return this.http.patch(`http://localhost:7000/api/rides/${id}`, data);
   }
 
-  // GET /api/rides/:id
   bookingProgress(rideID: string) {
     console.log(rideID);
     return this.http.get(`http://localhost:7000/api/rides/${rideID}`);
   }
 
-  // POST /api/reviews
+
   submitFeedback(data: any) {
     return this.http.post('http://localhost:7000/api/reviews', data);
   }
 
-  // GET /api/rides
+
   getMyBookings() {
     return this.http.get('http://localhost:7000/api/rides');
   }
 
-  // GET /api/users/profile
+
   getProfile() {
     return this.http.get('http://localhost:7000/api/users/profile');
   }

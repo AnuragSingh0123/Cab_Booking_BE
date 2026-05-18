@@ -2,7 +2,7 @@ const Booking = require("../models/booking");
 const Driver = require("../models/driver");
 const User = require("../models/user");
 
-// GET /api/users/profile
+
 const getProfile = async (req, res) => {
   try {
     console.log("heello");

@@ -2,7 +2,6 @@ import {
   Component,
   OnDestroy,
   OnInit,
-  Signal,
   inject,
   signal,
 } from '@angular/core';

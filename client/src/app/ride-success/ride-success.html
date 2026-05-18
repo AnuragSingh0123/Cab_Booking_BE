@@ -56,7 +56,7 @@
            @case ('accepted') {
 
     <h1 class="title">
-        Driver Found
+        Your Driver is on the Way
     </h1>
 
     <div class="driver-card">
@@ -65,33 +65,43 @@
             {{ ride.driver?.name?.charAt(0) || 'D' }}
         </div>
 
-        <p>
+        <p class="driver-name">
             {{ ride.driver?.name }}
         </p>
 
-        <p>
+        <p class="vehicle-details">
             {{ ride.driver?.vehicle }}
             •
             {{ ride.driver?.vehicleNo }}
         </p>
 
+        <p class="helper-text">
+            Please be ready at your pickup location.
+        </p>
+
         @if (ETA() !== null && ED() !== null) {
+
             <div class="eta-card">
 
                 <p class="eta-title">
-                    Driver arriving in
-                    <b>{{ ETA() }} min</b>
+                    Arriving in
+                    <b>{{ liveETA() }} min</b>
                 </p>
 
                 <p class="eta-subtitle">
-                    Distance: <b>{{ ED() }} km</b> to pickup
+                    Driver is
+                    <b>{{ liveED() }} km</b>
+                    away
                 </p>
 
             </div>
+
         } @else {
+
             <p class="eta-loading">
-                Calculating arrival time...
+                Estimating driver's arrival...
             </p>
+
         }
 
         <button

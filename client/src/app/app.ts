@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { RouterModule, RouterOutlet } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { Navbar } from './navbar/navbar';
 import { PopupMessage } from './popup-message/popup-message';
 

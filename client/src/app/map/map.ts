@@ -1,4 +1,4 @@
-import { Component, effect, inject} from '@angular/core';
+import { Component, inject} from '@angular/core';
 import { MapRenderService } from '../map-render-service';
 import { RideService } from '../ride-service';
 

@@ -42,7 +42,7 @@ export class AuthService {
 
     this.user.set(null);
     this.token.set(null);
-``
+    
     this.router.navigate(["/"]);
   }
 

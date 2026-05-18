@@ -123,7 +123,7 @@
 
 .suggestions-dropdown {
     position: absolute;
-    top: 100%; /* Directly below the input */
+    top: 100%;
     left: 0;
     right: 0;
     background: white;

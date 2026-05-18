@@ -6,8 +6,6 @@ import { FormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, of, Subject, switchMap } from 'rxjs';
 import { LocationService } from '../location-service';
 import { DriverService } from '../driver-service';
-import { Login } from '../login/login';
-import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-profile',

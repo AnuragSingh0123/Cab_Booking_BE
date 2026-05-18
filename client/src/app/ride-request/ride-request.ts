@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -43,7 +43,7 @@ export class RideRequest {
       return;
     }
 
-    // Pickup Search
+
     this.pickupSubject.pipe(
       debounceTime(300),
       switchMap(value => {
@@ -59,7 +59,7 @@ export class RideRequest {
       this.pickupSuggestions = res || [];
     });
 
-    // Drop Search
+
     this.dropSubject.pipe(
       debounceTime(300),
       switchMap(value => {
