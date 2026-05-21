@@ -24,7 +24,7 @@ export class DriverDashboard implements OnInit, OnDestroy {
   reviews = signal<any[]>([]);
   activeRide = signal<any | null>(null);
   availableRide = signal<any | null>(null);
-  driverToggleStatus: 'Online' | 'Offline' = 'Online';
+  driverToggleStatus = false;
   driver = signal({
     id: '',
     name: '',
@@ -32,6 +32,7 @@ export class DriverDashboard implements OnInit, OnDestroy {
     vehicle: '',
     vehicleNo: '',
     rating: 0,
+    isAvailable: false
   });
 
   stats = signal({
@@ -82,21 +83,24 @@ export class DriverDashboard implements OnInit, OnDestroy {
         console.log(data);
         this.reviews.set(data?.reviews ?? []);
 
-        const availableRide = data?.availableRide ?? null;
+        this.driverToggleStatus =
+  data?.driver?.isAvailable ?? false;
 
-        if (
-          availableRide &&
-          this.driver().vehicle &&
-          availableRide.vehicle &&
-          this.driver().vehicle.toLowerCase() ===
-            availableRide.vehicle.toLowerCase()
-        ) {
-          if(this.driverToggleStatus === "Online"){
-            this.availableRide.set(availableRide);
-          }
-        } else {
-          this.availableRide.set(null);
-        }
+const availableRide = data?.availableRide ?? null;
+
+if (
+  this.driverToggleStatus &&
+  availableRide &&
+  this.driver().vehicle &&
+  availableRide.vehicle &&
+  this.driver().vehicle.toLowerCase() ===
+    availableRide.vehicle.toLowerCase()
+) {
+  this.availableRide.set(availableRide);
+} else {
+  this.availableRide.set(null);
+}
+        
 
         this.activeRide.set(data?.activeRide ?? null);
 
@@ -105,7 +109,7 @@ export class DriverDashboard implements OnInit, OnDestroy {
           vehicle: data?.driver?.vehicleType ?? '',
           vehicleNo: data?.driver?.vehicleNumber ?? '',
           rating: data?.driver?.rating ?? 0,
-          online: data?.driver?.online ?? true,
+          isAvailable: data?.driver?.isAvailable ?? false,
         }));
 
         this.stats.set({
@@ -123,12 +127,18 @@ export class DriverDashboard implements OnInit, OnDestroy {
 
 
   toggleStatus() {
-    if(this.driverToggleStatus === 'Online') {
+  this.driverToggleStatus = !this.driverToggleStatus;
 
-      this.driverToggleStatus = 'Offline'
-    } else {
-      this.driverToggleStatus = 'Online'
-    }
+  this.driverService
+    .toggleDriverStatus(this.driverToggleStatus)
+    .subscribe({
+      next: res => {
+        console.log('status updated', res);
+      },
+      error: err => {
+        console.log('status update failed', err);
+      },
+    });
 }
 
   acceptRide() {

@@ -16,10 +16,14 @@ const getDriverDashboard = async (req, res) => {
       });
     }
 
-    const availableRide = await Booking.findOne({
-      status: "requested",
-      driverId: null,
-    }).sort({ createdAt: 1 });
+    let availableRide = null;
+
+if (driver.isAvailable) {
+  availableRide = await Booking.findOne({
+    status: "requested",
+    driverId: null,
+  }).sort({ createdAt: 1 });
+}
 
     const activeRide = await Booking.findOne({
       driverId: req.user.id,
@@ -69,6 +73,8 @@ const getDriverDashboard = async (req, res) => {
 
 const toggleDriverStatus = async (req, res) => {
   try {
+    const { isAvailable } = req.body;
+
     const driver = await Driver.findOne({
       userId: req.user.id,
     });
@@ -79,13 +85,18 @@ const toggleDriverStatus = async (req, res) => {
       });
     }
 
-    driver.online = !driver.online;
+    driver.isAvailable = isAvailable;
 
     await driver.save();
 
-    res.json(driver);
+    res.status(200).json({
+      message: "Driver status updated",
+      driver,
+    });
+
   } catch (err) {
     console.log(err);
+
     res.status(500).json({
       message: "Server error",
     });
