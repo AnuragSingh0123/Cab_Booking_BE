@@ -171,11 +171,19 @@
 
                     @if(signUpForm.get('licenseNumber')?.touched && signUpForm.get('licenseNumber')?.invalid){
 
-                        <small class="error-text">
-                            License number is required
-                        </small>
+    <small class="error-text">
 
-                    }
+        @if(signUpForm.get('licenseNumber')?.errors?.['required']){
+            License number is required
+        }
+
+        @if(signUpForm.get('licenseNumber')?.errors?.['pattern']){
+            Enter valid license number
+        }
+
+    </small>
+
+}
 
                 </div>
 
@@ -269,11 +277,19 @@
 
                     @if(signUpForm.get('vehicleNumber')?.touched && signUpForm.get('vehicleNumber')?.invalid){
 
-                        <small class="error-text">
-                            Enter valid vehicle number
-                        </small>
+    <small class="error-text">
 
-                    }
+        @if(signUpForm.get('vehicleNumber')?.errors?.['required']){
+            Vehicle number is required
+        }
+
+        @if(signUpForm.get('vehicleNumber')?.errors?.['pattern']){
+            Enter valid vehicle number
+        }
+
+    </small>
+
+}
 
                 </div>
 

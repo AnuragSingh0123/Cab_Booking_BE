@@ -36,11 +36,11 @@ export class DriverSignup {
 
     driverLocation: ['', [Validators.required]],
 
-    licenseNumber: ['', [Validators.required]],
+    licenseNumber: ['',[Validators.required, Validators.pattern(/^[A-Z]{2}[0-9]{2}[0-9]{4}[0-9]{7}$/)]],
 
     vehicleType: ['', [Validators.required]],
 
-    vehicleNumber: ['', [Validators.required]],
+     vehicleNumber: ['',[Validators.required, Validators.pattern(/^[A-Z]{2}[0-9]{1,2}[A-Z]{1,2}[0-9]{4}$/)]],
   });
 
   currentAddressSuggestions: any[] = [];

@@ -24,12 +24,14 @@ export class DriverService {
     );
   }
 
-  toggleDriverStatus() {
-    return this.http.patch(
-      `${environment.baseUrl}/api/driver/status`,
-      {}
-    );
-  }
+  toggleDriverStatus(status: boolean) {
+  return this.http.patch(
+    `${environment.baseUrl}/api/driver/status`,
+    {
+      isAvailable: status,
+    }
+  );
+}
 
   acceptRide(bookingId: string) {
     return this.http.patch(

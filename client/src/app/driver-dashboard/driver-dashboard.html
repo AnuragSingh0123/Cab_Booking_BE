@@ -21,21 +21,20 @@
 
     <!-- online -->
     <div class="status-card">
-        <div>
-            <span class="label">STATUS</span>
+  <div>
+    <span class="label">STATUS</span>
 
-            <p
-                [ngClass]="driverToggleStatus=='Online'?'green':'red'">
-                ● {{driverToggleStatus}}
-            </p>
-        </div>
+    <p [ngClass]="driverToggleStatus ? 'green' : 'red'">
+      ● {{ driverToggleStatus ? 'Online' : 'Offline' }}
+    </p>
+  </div>
 
-        <button
-            class="toggle-btn"
-            (click)="toggleStatus()">
-            Go {{driverToggleStatus}}
-        </button>
-    </div>
+  <button
+    class="toggle-btn"
+    (click)="toggleStatus()">
+    Go {{ driverToggleStatus ? 'Offline' : 'Online' }}
+  </button>
+</div>
 
     <!-- stats -->
     <div class="stats-grid">
