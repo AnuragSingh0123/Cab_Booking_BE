@@ -131,7 +131,7 @@ if (!this.editName.trim() || !this.editEmail.trim()) {
         };
 
         this.user.set(updatedData);
-        localStorage.setItem('user', JSON.stringify(this.user));
+        localStorage.setItem('user', JSON.stringify(updatedData));
 
         this.editP = false;
       },

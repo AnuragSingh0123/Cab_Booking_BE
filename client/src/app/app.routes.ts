@@ -24,7 +24,7 @@ export const routes: Routes = [
   { path: "login", component: Login },
   { path: "sign-up", component: UserSignup },
 { path: "driver-signup", component: DriverSignup },
-  {path: "profile", component: Profile},
+  {path: "profile", component: Profile, canActivate:[authGuard], data:{roles:['rider', 'driver']}},
   {path: "about", component:About},
   {path: "my-trips", component: MyTrips, canActivate: [authGuard], data: {roles: ['rider']}},
   {path: "driver-dashboard", component: DriverDashboard, canActivate: [authGuard], data: {roles: ['driver']}},

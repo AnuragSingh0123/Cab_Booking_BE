@@ -14,7 +14,7 @@ export class AuthService {
   user = signal<any | null>(this.getUserFromStorage());
   token = signal<string | null>(this.getTokenFromStorage());
 
-  isLoggedIn = computed(() => !!this.token());
+  isLoggedIn = computed(() => this.token() ? true : false);
   role = computed(() => this.user()?.role);
 
 
