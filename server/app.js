@@ -10,13 +10,13 @@ const reviewRoutes = require("./routes/reviewRoutes");
 
 const app = express();
 
-const corsOptions = {
-  origin: `${process.env.FRONTEND_URL}`,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+app.use(cors({
+  origin: 'http://localhost:4200',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-};
+  credentials: true
+}));
 
-app.use(cors(corsOptions));
 
 app.use(express.json());
 
