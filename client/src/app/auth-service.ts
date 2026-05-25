@@ -17,6 +17,7 @@ export class AuthService {
   role = computed(() => this.user()?.role);
 
   constructor() {
+    console.log("check auth status called..")
     this.checkAuthStatus();
   }
 

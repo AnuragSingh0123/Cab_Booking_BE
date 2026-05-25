@@ -8,15 +8,6 @@ import { environment } from '../environments/environment';
 export class DriverService {
   http = inject(HttpClient);
 
-  private getHeaders() {
-    const token = localStorage.getItem('token');
-
-    return {
-      headers: new HttpHeaders({
-        Authorization: `Bearer ${token}`,
-      }),
-    };
-  }
 
   getDriverDashboard() {
     return this.http.get(

@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { RideService } from '../ride-service';
 import { FormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, of, Subject, switchMap } from 'rxjs';
 import { LocationService } from '../location-service';
 import { DriverService } from '../driver-service';
+import { AuthService } from '../auth-service';
 
 @Component({
   selector: 'app-profile',
@@ -25,6 +26,7 @@ export class Profile {
   });
 
   rideService = inject(RideService);
+  authService=inject(AuthService);
   router = inject(Router);
 
   //----------------By Aditya--------------------------
@@ -35,15 +37,23 @@ export class Profile {
   locationService = inject(LocationService);
   driverService = inject(DriverService);
 
-  ngOnInit() {
-    const userData = localStorage.getItem('user');
 
-    if (userData) {
-      this.user.set(JSON.parse(userData));
-      this.rideService.getProfile().subscribe((res: any) => {
+  constructor() {
+    effect(() => {
+      const currentUser = this.authService.user();
+      if (currentUser) {
+        this.user.set(currentUser);
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.rideService.getProfile().subscribe({
+      next: (res: any) => {
         this.rideDetails.set(res);
-      });
-    }
+      },
+      error: (err) => console.error('Failed to load profile metrics', err)
+    });
 
     this.pickupSubject.pipe(
       debounceTime(300),

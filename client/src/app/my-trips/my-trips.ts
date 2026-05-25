@@ -10,17 +10,10 @@ import { RideService } from '../ride-service';
 })
 export class MyTrips {
   rideService = inject(RideService);
-
-  user = signal<any>(null);
   userRides = signal<any[]>([]);
   loading = signal(true);
 
   ngOnInit() {
-    const userData = localStorage.getItem('user');
-
-    if (userData) {
-      this.user.set(JSON.parse(userData));
-    }
 
     this.rideService.getMyBookings().subscribe({
       next: (res: any) => {

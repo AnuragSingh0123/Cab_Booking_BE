@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { PopupService } from '../popup-service';
 import { LocationService } from '../location-service';
 import { Router } from '@angular/router';
@@ -47,14 +47,15 @@ export class DriverSignup {
 
   driverCoordinates: number[] | null = null;
 
+  constructor() {
+    effect(() => {
+      if (this.authService.isLoggedIn()) {
+        this.router.navigate(['/']);
+      }
+    });
+  }
+
   ngOnInit() {
-
-    const user = localStorage.getItem('user');
-
-    if (user) {
-      this.router.navigate(['/']);
-    }
-
     this.signUpForm
       .get('driverLocation')
       ?.valueChanges.pipe(

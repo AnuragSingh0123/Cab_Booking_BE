@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -8,6 +8,7 @@ import { Subject, debounceTime, switchMap, of } from 'rxjs';
 import { RideService } from '../ride-service';
 import { LocationService } from '../location-service';
 import { BuildRouteService } from '../build-route-service';
+import { AuthService } from '../auth-service';
 
 @Component({
   selector: 'app-ride-request',
@@ -22,6 +23,7 @@ export class RideRequest {
   rideService = inject(RideService);
   locationService = inject(LocationService);
   buildRouteService=inject(BuildRouteService);
+  authService=inject(AuthService);
 
   pickup = '';
   drop = '';
@@ -34,15 +36,19 @@ export class RideRequest {
   pickupSubject = new Subject<string>();
   dropSubject = new Subject<string>();
 
+
+  constructor() {
+    effect(() => {
+      const user = this.authService.user();
+      console.log("Reactive User State updated:", user);
+
+      if (user && user.role === 'driver') {
+        this.router.navigate(['/driver-dashboard']);
+      }
+    });
+  }
+
   ngOnInit() {
-
-    const user = JSON.parse(localStorage.getItem('user') || 'null');
-
-    if (user?.role === 'driver') {
-      this.router.navigate(['/driver-dashboard']);
-      return;
-    }
-
 
     this.pickupSubject.pipe(
       debounceTime(300),
@@ -105,6 +111,11 @@ export class RideRequest {
       return;
     }
 
+    if (!this.authService.isLoggedIn()) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
     this.rideService.updateRide({
       pickup: this.pickup,
       drop: this.drop
@@ -112,12 +123,5 @@ export class RideRequest {
 
     this.buildRouteService.buildRoute(this.pickup, this.drop);
     
-
-    const token = localStorage.getItem('token');
-
-    if (!token) {
-      this.router.navigate(['/login']);
-      return;
-    }
   }
 }
