@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../auth-service';
@@ -20,15 +20,16 @@ export class Login{
   authService = inject(AuthService);
   rideService = inject(RideService);
   
-  ngOnInit() {
-  const user = localStorage.getItem('user');
-
-  if (user) {
-    this.router.navigate(['/']);
-  }
-}
   ride = this.rideService.booking;
   loading = false;
+
+   constructor() {
+    effect(() => {
+      if (this.authService.isLoggedIn()) {
+        this.router.navigate(['/']);
+      }
+    });
+  }
 
   login(loginForm: NgForm) {
 
@@ -42,7 +43,7 @@ export class Login{
 
         this.loading = false;
 
-        this.authService.setSession(res);
+        this.authService.checkAuthStatus();
 
         const ride = this.ride();
 

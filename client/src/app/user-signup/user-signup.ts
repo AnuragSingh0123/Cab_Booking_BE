@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { PopupService } from '../popup-service';
 import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -26,12 +26,12 @@ export class UserSignup {
     confirmPassword: ['', [Validators.required]],
   });
 
-  ngOnInit() {
-    const user = localStorage.getItem('user');
-
-    if (user) {
-      this.router.navigate(['/']);
-    }
+  constructor() {
+    effect(() => {
+      if (this.authService.isLoggedIn()) {
+        this.router.navigate(['/']);
+      }
+    });
   }
 
   signup() {
