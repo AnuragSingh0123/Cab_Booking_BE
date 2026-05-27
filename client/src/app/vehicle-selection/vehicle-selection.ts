@@ -36,19 +36,19 @@ export class VehicleSelection {
       let fare = 0;
 
       switch (this.selectedValue) {
-        case 'mini':
+        case 'Mini':
           fare = 50 + distance * 10;
           break;
 
-        case 'sedan':
+        case 'Sedan':
           fare = 70 + distance * 14;
           break;
 
-        case 'suv':
+        case 'SUV':
           fare = 100 + distance * 18;
           break;
 
-        case 'premium':
+        case 'Premium':
           fare = 150 + distance * 25;
           break;
 

@@ -84,6 +84,7 @@ export class DriverDashboard implements OnInit, OnDestroy {
   refresh() {
     this.driverService.getDriverDashboard().subscribe({
       next: (data: any) => {
+
         this.reviews.set(data?.reviews ?? []);
 
         this.driverToggleStatus = data?.driver?.isAvailable ?? false;

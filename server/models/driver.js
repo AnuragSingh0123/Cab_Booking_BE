@@ -13,8 +13,7 @@ const driverSchema = new mongoose.Schema({
   },
   vehicleType: {
     type: String,
-    enum: ["mini", "sedan", "suv", "premium"],
-    lowercase: true,
+    enum: ["Mini", "Sedan", "SUV", "Premium"],
     required: true
   },
   vehicleNumber: {

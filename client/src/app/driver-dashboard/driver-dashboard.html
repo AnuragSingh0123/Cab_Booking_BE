@@ -38,7 +38,6 @@
   </button>
 </div>
 
-    <!-- stats -->
     <div class="stats-grid">
         <div class="stat-card">
             <span>Trips</span>
@@ -61,7 +60,6 @@
         </div>
     </div>
 
-    <!-- available ride -->
     @if(availableRide()){
     <div class="ride-card">
 
@@ -88,7 +86,7 @@
         <div class="ride-row">
             <span class="label">VEHICLE</span>
             <span class="value">
-                {{availableRide()?.vehicle | titlecase}}
+                {{availableRide()?.vehicle}}
             </span>
         </div>
 
@@ -116,7 +114,6 @@
     </div>
     }
 
-    <!-- active ride -->
     @if(activeRide()){
     <div class="ride-card">
 
@@ -166,7 +163,6 @@
     </div>
     }
 
-    <!-- reviews -->
     @if(reviews().length){
     <div class="review-section">
 
@@ -192,7 +188,7 @@
 
                 @if(review.feedback){
                 <p class="feedback">
-                    "{{review.feedback}}"
+                    {{review.feedback}}
                 </p>
                 }
 
