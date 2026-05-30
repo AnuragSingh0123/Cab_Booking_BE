@@ -21,7 +21,6 @@ const bookRide = async (req, res) => {
   }
 };
 
-
 const getMyTrips = async (req, res) => {
   try {
     const bookings = await Booking.find({
@@ -36,7 +35,6 @@ const getMyTrips = async (req, res) => {
     });
   }
 };
-
 
 const updateBooking = async (req, res) => {
   try {
@@ -67,7 +65,6 @@ const updateBooking = async (req, res) => {
   }
 };
 
-
 const getBookingById = async (req, res) => {
   try {
     const booking = await Booking.findById(req.params.id);
@@ -85,9 +82,9 @@ const getBookingById = async (req, res) => {
         userId: booking.driverId,
       });
 
-      const userDetails = await User.findById(
-        booking.driverId
-      ).select("-password");
+      const userDetails = await User.findById(booking.driverId).select(
+        "-password",
+      );
 
       driver = {
         name: userDetails.name,
@@ -95,7 +92,7 @@ const getBookingById = async (req, res) => {
         vehicle: driverDetails.vehicleType,
         vehicleNo: driverDetails.vehicleNumber,
         license: driverDetails.licenseNumber,
-        driverCoordinates: driverDetails.driverCoordinates
+        driverCoordinates: driverDetails.driverCoordinates,
       };
     }
 
@@ -110,8 +107,6 @@ const getBookingById = async (req, res) => {
     });
   }
 };
-
-
 
 module.exports = {
   bookRide,

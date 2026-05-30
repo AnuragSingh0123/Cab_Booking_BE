@@ -26,7 +26,7 @@ const bookingSchema = new mongoose.Schema(
     },
     gst: {
       type: Number,
-      required: true
+      required: true,
     },
     total: {
       type: Number,
@@ -57,7 +57,7 @@ const bookingSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Driver",
-      }
+      },
     ],
     driverId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -70,7 +70,7 @@ const bookingSchema = new mongoose.Schema(
       default: "requested",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("Booking", bookingSchema);

@@ -1,6 +1,5 @@
 const Review = require("../models/review");
 
-
 const submitFeedback = async (req, res) => {
   try {
     const { driverId, rating, feedback, bookingId } = req.body;

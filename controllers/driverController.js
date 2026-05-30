@@ -3,7 +3,6 @@ const Driver = require("../models/driver");
 const User = require("../models/user");
 const Review = require("../models/review");
 
-
 const getDriverDashboard = async (req, res) => {
   try {
     const driver = await Driver.findOne({
@@ -48,7 +47,7 @@ const getDriverDashboard = async (req, res) => {
       hours: Number(
         (
           completed.reduce((sum, ride) => sum + (ride.duration || 0), 0) / 60
-        ).toFixed(1)
+        ).toFixed(1),
       ),
     };
 
@@ -66,7 +65,6 @@ const getDriverDashboard = async (req, res) => {
     });
   }
 };
-
 
 const toggleDriverStatus = async (req, res) => {
   try {
@@ -90,7 +88,6 @@ const toggleDriverStatus = async (req, res) => {
       message: "Driver status updated",
       driver,
     });
-
   } catch (err) {
     console.log(err);
 
@@ -100,10 +97,8 @@ const toggleDriverStatus = async (req, res) => {
   }
 };
 
-
 const updateDriverLocation = async (req, res) => {
   try {
-
     const user = await User.findById(req.user.id);
     const userId = user._id;
 
@@ -112,8 +107,10 @@ const updateDriverLocation = async (req, res) => {
     if (place) {
       const updateLocation = await Driver.findOneAndUpdate(
         { userId: userId },
-        { $set: { driverLocation: place, driverCoordinates: driverCoordinates } },
-        { returnDocument: "after" }
+        {
+          $set: { driverLocation: place, driverCoordinates: driverCoordinates },
+        },
+        { returnDocument: "after" },
       );
 
       return res.status(200).json(updateLocation);
@@ -125,7 +122,6 @@ const updateDriverLocation = async (req, res) => {
     });
   }
 };
-
 
 const rejectBooking = async (req, res) => {
   try {
@@ -141,7 +137,7 @@ const rejectBooking = async (req, res) => {
       {
         $addToSet: { rejectedDrivers: driver._id },
       },
-      { new: true }
+      { new: true },
     );
 
     if (!updatedBooking) {
@@ -150,12 +146,13 @@ const rejectBooking = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Ride rejected successfully."
+      message: "Ride rejected successfully.",
     });
-
   } catch (error) {
     console.error("Rejection error:", error);
-    return res.status(500).json({ message: "Server error", error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Server error", error: error.message });
   }
 };
 
@@ -163,5 +160,5 @@ module.exports = {
   getDriverDashboard,
   toggleDriverStatus,
   updateDriverLocation,
-  rejectBooking
+  rejectBooking,
 };

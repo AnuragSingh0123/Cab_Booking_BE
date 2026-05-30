@@ -2,10 +2,8 @@ const Booking = require("../models/booking");
 const Driver = require("../models/driver");
 const User = require("../models/user");
 
-
 const getProfile = async (req, res) => {
   try {
-
     const user = await User.findById(req.user.id);
     const id = user._id;
     const role = user.role;
@@ -25,7 +23,7 @@ const getProfile = async (req, res) => {
 
     const distanceTravelled = bookingData.reduce(
       (sum, ride) => sum + ride.distance,
-      0
+      0,
     );
 
     const totalSpent = bookingData.reduce((sum, ride) => sum + ride.total, 0);
@@ -44,11 +42,8 @@ const getProfile = async (req, res) => {
   }
 };
 
-
 const editProfile = async (req, res) => {
   try {
-
-
     const { name, email } = req.body.editUser;
     const userId = req.user.id;
 
@@ -65,33 +60,34 @@ const editProfile = async (req, res) => {
     }
 
     if (email && email !== user.email) {
-
       const emailExists = await User.findOne({ email, _id: { $ne: userId } });
 
       if (emailExists) {
-        return res.status(400).json({ message: "This email is already registered to another account!" });
+        return res
+          .status(400)
+          .json({
+            message: "This email is already registered to another account!",
+          });
       }
       updateFields.email = email;
     }
 
-    await User.updateOne(
-      { _id: userId },
-      { $set: updateFields }
-    );
+    await User.updateOne({ _id: userId }, { $set: updateFields });
 
     const updatedUser = await User.findById(userId).select("-password");
 
     return res.status(200).json({
       message: "Updated Successfully",
-      user: updatedUser
+      user: updatedUser,
     });
-
   } catch (error) {
-    return res.status(500).json({ message: "Internal Server Error", error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
   }
-}
+};
 
 module.exports = {
   getProfile,
-  editProfile
+  editProfile,
 };
