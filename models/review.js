@@ -1,31 +1,31 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const reviewSchema = new mongoose.Schema(
   {
     driverId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Driver',
-      required: true
+      ref: "Driver",
+      required: true,
     },
 
     bookingId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Booking'
+      ref: "Booking",
     },
 
     rating: {
       type: Number,
       min: 1,
       max: 5,
-      required: true
+      required: true,
     },
 
     feedback: {
       type: String,
-      default: ''
-    }
+      default: "",
+    },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-module.exports = mongoose.model('Review', reviewSchema);
+module.exports = mongoose.model("Review", reviewSchema);

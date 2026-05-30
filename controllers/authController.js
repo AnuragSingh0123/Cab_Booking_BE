@@ -2,7 +2,7 @@ const User = require("../models/user");
 const Driver = require("../models/driver");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const dotenv = require('dotenv').config();
+const dotenv = require("dotenv").config();
 
 exports.signUp = async (req, res) => {
   try {
@@ -15,14 +15,14 @@ exports.signUp = async (req, res) => {
       vehicleType,
       vehicleNumber,
       driverLocation,
-      driverCoordinates
+      driverCoordinates,
     } = req.body;
 
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
       return res.status(400).json({
-        message: "User already exists"
+        message: "User already exists",
       });
     }
 
@@ -32,7 +32,7 @@ exports.signUp = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      role
+      role,
     });
 
     if (role === "driver") {
@@ -42,18 +42,16 @@ exports.signUp = async (req, res) => {
         vehicleType,
         vehicleNumber,
         driverLocation,
-        driverCoordinates
+        driverCoordinates,
       });
     }
 
     res.status(201).json({
-      message: "Registration Successful"
+      message: "Registration Successful",
     });
-
-
   } catch (err) {
     res.status(500).json({
-      message: "Internal Server Error"
+      message: "Internal Server Error",
     });
   }
 };
@@ -79,17 +77,16 @@ exports.login = async (req, res) => {
         id: user._id,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "1h" },
     );
 
     res.cookie("token", token, {
       httpOnly: true,
       secure: false,
-      sameSite: "lax"
-    })
+      sameSite: "lax",
+    });
 
     res.json({ message: "Login successful" });
-
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Server error" });
@@ -109,15 +106,14 @@ exports.getUser = async (req, res) => {
     console.log("Error while fetching user profile", err);
     res.status(500).json({ message: "Server error" });
   }
-}
-
+};
 
 exports.logout = async (req, res) => {
   try {
     res.clearCookie("token");
-    res.json({ message: "Logged out successful" })
+    res.json({ message: "Logged out successful" });
   } catch (err) {
     console.log("Error during logout", err);
-    res.status(500).json({ message: "Server error during logout" })
+    res.status(500).json({ message: "Server error during logout" });
   }
-}
+};
